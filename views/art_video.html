@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+	<html lang="zh-cn" style="width: 100%; overflow-x: hidden">
+	<head>
+	<meta charset="utf-8">
+	<meta
+		content="width=device-width, initial-scale=1.0,minimum-scale=1.0, maximum-scale=1.0, user-scalable=0"
+		name="viewport">
+	<meta name="x5-orientation" content="portrait">
+	<title>艺论视频</title>
+	<link rel="stylesheet" href="../static/css/sweetalert.css" />
+	<link rel="stylesheet" href="../css/art_video.css" />
+	<script src="../js/jquery.min.1.8.3.js"></script>
+	<script src="../static/js/response.js"></script>
+	<script src="../static/js/sweetalert.min.js"></script>
+	<script src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+	</head>
+	<body>
+		<div class="art_head">
+			<div class="head_main">
+				<h2>2017秋拍特辑上海保利拍卖--总经理魏辉等等</h2>
+				<span style="color: #bcbcbc">2016-12-06</span>
+				<span style="margin-left: 1.08rem;color: #29b3d0">艺论官方</span>
+			</div>
+		</div>
+		<div class="art_main">
+			<div class="news_main">
+				<div class="news_img">
+					<video src="" width="100%" poster="http://oku9krjjy.bkt.clouddn.com/fs_root/icon_url/images/Local/9f36c8b034014af9ad5982b3aa10fb18/09df61c0192541cd9d3040378f6d53a3.jpeg" id="art_video">
+						
+					</video>
+					<!-- <div class="control"><img src="../default_icon/message_video_icon@2x.png"/></div> -->
+				</div>
+				<p>曾几何时，网红还是人类的代言词，遥想当年网红鼻祖CK沉珂都退隐江湖了，后起之秀层出不穷，谁能想到现在一只汪星人的微博关注度随随便便赶超明星。</p>
+				<p>曾几何时，网红还是人类的代言词，遥想当年网红鼻祖CK沉珂都退隐江湖了，后起之秀层出不穷，谁能想到现在一只汪星人的微博关注度随随便便赶超明星。</p>
+			</div>
+		</div>
+		<script type="text/javascript">
+			var video=document.getElementById("art_video");
+			$(".control").on('click',function(){
+				if(video.paused){
+					video.play();
+				}else{
+					video.paused;
+				}
+			})
+		</script>
+	</body>
+</html>

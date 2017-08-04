@@ -1,0 +1,29 @@
+{
+  "name": "demo",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "Q": "^0.0.1",
+    "bluebird": "^3.5.0",
+    "body-parser": "~1.17.1",
+    "co": "^4.6.0",
+    "cookie-parser": "~1.4.3",
+    "crypto": "^0.0.3",
+    "debug": "~2.6.3",
+    "express": "~4.15.2",
+    "express-promise": "^0.4.0",
+    "express-session": "^1.15.3",
+    "gbk": "^0.1.0",
+    "jade": "~1.11.0",
+    "morgan": "~1.8.1",
+    "q": "^1.5.0",
+    "request": "^2.81.0",
+    "request-promise": "^4.2.1",
+    "serve-favicon": "~2.4.2",
+    "sha1": "^1.1.1",
+    "urlencode": "^1.1.0"
+  }
+}

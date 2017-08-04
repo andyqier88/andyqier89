@@ -1,0 +1,720 @@
+doctype html
+html(style="width: 100%; overflow-x: hidden" lang="zh-cn" )
+  head
+    title 数据统计
+    meta(charset='UTF-8')
+    meta(content="width=device-width, initial-scale=1.0,minimum-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport")
+    script(src='/ArtWebStatic/javascripts/jquery.min.1.8.3.js')
+    script(src='/ArtWebStatic/javascripts/highcharts.js')
+    style.
+      .header {
+        margin: 36px auto 0px;
+        text-align: center;
+        border-bottom: 1px solid #000;
+        height: 96px;
+      }
+      .header h3 {
+        font-size: 26px;
+        color: #000;
+      }
+      .wrap {
+        margin: 0px auto;
+      }
+      .content {
+        display: box;
+        display: flex;
+        display: -webkit-box; /* OLD - iOS 6-, Safari 3.1-6 */
+        display: -moz-box; /* OLD - Firefox 19- (buggy but mostly works) */
+        display: -ms-flexbox; /* TWEENER - IE 10 */
+        display: -webkit-flex; /* NEW - Chrome */
+        width: 100%;
+        height: 245px;
+      }
+      .content_x {
+        height: 25px;
+      }
+      .content_botom {
+        display: box;
+        display: flex;
+        display: -webkit-box; /* OLD - iOS 6-, Safari 3.1-6 */
+        display: -moz-box; /* OLD - Firefox 19- (buggy but mostly works) */
+        display: -ms-flexbox; /* TWEENER - IE 10 */
+        display: -webkit-flex; /* NEW - Chrome */
+        width: 100%;
+      }
+      .content_top {
+        margin-top: 15px;
+        margin-bottom: 15px;
+        text-align: center;
+        font-size: 16px;
+        color: #000;
+      }
+      #leftArea {
+        flex: 1;
+        width: 50%;
+        box-flex: 1;
+        height: 100%;
+        -webkit-box-flex: 1; /* OLD - iOS 6-, Safari 3.1-6 */
+        -moz-box-flex: 1; /* OLD - Firefox 19- */
+        -webkit-flex: 1; /* Chrome */
+        -ms-flex: 1; /* IE 10 */
+      }
+      #rightArea {
+        flex: 1;
+        box-flex: 1;
+        width: 50%;
+        height: 100%;
+        -webkit-box-flex: 1; /* OLD - iOS 6-, Safari 3.1-6 */
+        -moz-box-flex: 1; /* OLD - Firefox 19- */
+        -webkit-flex: 1; /* Chrome */
+        -ms-flex: 1;
+      }
+      .avg_grade {
+        width: 50%;
+        flex: 1;
+        box-flex: 1;
+        color: #000;
+        font-size: 16px;
+        -webkit-box-flex: 1; /* OLD - iOS 6-, Safari 3.1-6 */
+        -moz-box-flex: 1; /* OLD - Firefox 19- */
+        -webkit-flex: 1; /* Chrome */
+        -ms-flex: 1;
+      }
+      .avg_appraise {
+        width: 50%;
+        flex: 1;
+        box-flex: 1;
+        color: #000;
+        font-size: 16px;
+        -webkit-box-flex: 1; /* OLD - iOS 6-, Safari 3.1-6 */
+        -moz-box-flex: 1; /* OLD - Firefox 19- */
+        -webkit-flex: 1; /* Chrome */
+        -ms-flex: 1;
+      }
+      #s_leftArea {
+        width: 50%;
+        box-flex: 1;
+        flex: 1;
+        height: 100%;
+        -webkit-box-flex: 1; /* OLD - iOS 6-, Safari 3.1-6 */
+        -moz-box-flex: 1; /* OLD - Firefox 19- */
+        -webkit-flex: 1; /* Chrome */
+        -ms-flex: 1;
+      }
+      #s_rightArea {
+        width: 50%;
+        flex: 1;
+        height: 100%;
+        -webkit-box-flex: 1; /* OLD - iOS 6-, Safari 3.1-6 */
+        -moz-box-flex: 1; /* OLD - Firefox 19- */
+        -webkit-flex: 1; /* Chrome */
+        -ms-flex: 1;
+      }
+      .expert_avg_appraise {
+        width: 50%;
+        box-flex: 1;
+        flex: 1;
+        color: #000;
+        font-size: 16px;
+        -webkit-box-flex: 1; /* OLD - iOS 6-, Safari 3.1-6 */
+        -moz-box-flex: 1; /* OLD - Firefox 19- */
+        -webkit-flex: 1; /* Chrome */
+        -ms-flex: 1;
+      }
+      .expert_avg_grade {
+        width: 50%;
+        box-flex: 1;
+        flex: 1;
+        color: #000;
+        font-size: 16px;
+        -webkit-box-flex: 1; /* OLD - iOS 6-, Safari 3.1-6 */
+        -moz-box-flex: 1; /* OLD - Firefox 19- */
+        -webkit-flex: 1; /* Chrome */
+        -ms-flex: 1;
+      }
+      .s_color {
+        color: #ff7143;
+      }
+      @media ( max-width : 320px) {
+        .content {
+          display: box;
+          display: flex;
+          display: -webkit-box; /* OLD - iOS 6-, Safari 3.1-6 */
+          display: -moz-box; /* OLD - Firefox 19- (buggy but mostly works) */
+          display: -ms-flexbox; /* TWEENER - IE 10 */
+          display: -webkit-flex; /* NEW - Chrome */
+          display: flex; /* NEW, Spec - Opera 12.1, Firefox 20+ */
+          width: 100%;
+          height: 210px;
+        }
+        .content_top {
+          margin-top: 5px;
+          margin-bottom: 5px;
+          text-align: center;
+          font-size: 16px;
+          color: #000;
+        }
+        .content_x {
+          height: 10px;
+        }
+      }
+      @media ( min-width : 360px) and (max-width: 374px) {
+        .content {
+          display: box;
+          display: flex;
+          display: -webkit-box; /* OLD - iOS 6-, Safari 3.1-6 */
+          display: -moz-box; /* OLD - Firefox 19- (buggy but mostly works) */
+          display: -ms-flexbox; /* TWEENER - IE 10 */
+          display: -webkit-flex; /* NEW - Chrome */
+          display: flex; /* NEW, Spec - Opera 12.1, Firefox 20+ */
+          width: 100%;
+          height: 220px;
+        }
+        .content_top {
+          margin-top: 15px;
+          margin-bottom: 15px;
+          text-align: center;
+          font-size: 16px;
+          color: #000;
+        }
+        .content_x {
+          height: 25px;
+        }
+      }
+      @media ( min-width : 376px) and (max-width: 384px) {
+        .content {
+          display: box;
+          display: flex;
+          display: -webkit-box; /* OLD - iOS 6-, Safari 3.1-6 */
+          display: -moz-box; /* OLD - Firefox 19- (buggy but mostly works) */
+          display: -ms-flexbox; /* TWEENER - IE 10 */
+          display: -webkit-flex; /* NEW - Chrome */
+          display: flex; /* NEW, Spec - Opera 12.1, Firefox 20+ */
+          width: 100%;
+          height: 215px;
+        }
+        .content_top {
+          margin-top: 15px;
+          margin-bottom: 15px;
+          text-align: center;
+          font-size: 16px;
+          color: #000;
+        }
+        .content_x {
+          height: 20px;
+        }
+      }
+      *{
+        font-family: "microsoft yahei";
+      }
+      .data_close{
+        position: absolute;
+        right: 0.5rem;
+        top: 0.5rem;
+        border: 1px solid #ccc;
+        padding: 0.2rem 0.4rem;
+        border-radius: 50%;
+        font-family: cursive;
+      }
+      @-webkit-keyframes uil-ring-anim {
+        0% {
+          -webkit-transform: rotate(0deg);
+          transform: rotate(0deg);
+        }
+        100% {
+          -webkit-transform: rotate(360deg);
+          transform: rotate(360deg);
+          }
+      }
+      @-moz-keyframes uil-ring-anim {
+        0% {
+          -webkit-transform: rotate(0deg);
+          transform: rotate(0deg);
+        }
+        100% {
+          -webkit-transform: rotate(360deg);
+          transform: rotate(360deg);
+        }
+      }
+      @-webkit-keyframes uil-ring-anim {
+        0% {
+          -webkit-transform: rotate(0deg);
+          transform: rotate(0deg);
+        }
+        100% {
+          -webkit-transform: rotate(360deg);
+          transform: rotate(360deg);
+        }
+      }
+      @-o-keyframes uil-ring-anim {
+        0% {
+          -webkit-transform: rotate(0deg);
+          transform: rotate(0deg);
+        }
+        100% {
+          -webkit-transform: rotate(360deg);
+          transform: rotate(360deg);
+        }
+      }
+      @keyframes uil-ring-anim {
+        0% {
+          -webkit-transform: rotate(0deg);
+          transform: rotate(0deg);
+        }
+        100% {
+          -webkit-transform: rotate(360deg);
+          transform: rotate(360deg);
+        }
+      }
+      .uil-ring-css {
+        background: #fff;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        z-index: 4;
+      }
+      .uil-ring-css div {
+        position: absolute;
+        display: block;
+        width: 60px;
+        height: 60px;
+        top: 45%;
+        left: 45%;
+        border-radius: 30px;
+        box-shadow: 0 3px 0 0 #000000;
+        -webkit-transform-origin: 30px 31.5px;
+        transform-origin: 30px 31.5px;
+        -webkit-animation: uil-ring-anim 1s linear infinite;
+        animation: uil-ring-anim 1s linear infinite;
+      }
+  .uil-ring-css#ring
+    div
+  .wrap
+    //- .data_close X
+    .content_top 大家来看 
+    .content
+      #leftArea 
+        
+      #rightArea 
+        script.
+          
+    .content.content_x
+      .avg_grade  平均评分：#{dataApi.data.avgScore}
+        .s_color
+      .avg_appraise 平均估值：#{dataApi.data.avgValuation}
+
+      .s_color
+  div(style="border-bottom: 1px solid #666; margin-top: 15px;")   
+  .content_top 专家意见
+  .content
+    #s_leftArea
+      script.
+          
+    #s_rightArea
+      script.
+          
+  .content(style="height: 50px")
+    .expert_avg_grade(style="flex: 1; color: #000; font-size: 16px;") 平均评分：#{dataApi.data.expertAvgScore}
+      .s_color
+    .expert_avg_appraise 平均估值：#{dataApi.data.expertAvgValuation}
+      .s_color
+    script.
+      document.onreadystatechange = function(){
+        console.log(document.readyState)
+        if (document.readyState == "complete") {  
+          var ring = document.getElementById('ring');
+          ring.style.display = 'none';
+        }  
+      } 
+      var leftArea_json = {
+            color: [
+                "#ff7143",
+                "#ff7f55",
+                "#ff8d69",
+                "#ff9b7b",
+                "#ffaa8e",
+                "#ffb8a1",
+                "#ffd4c6",
+                "#ffe3d9",
+                "#fff1ec",
+                "#fff8f5",
+                "#ffffff",
+                ],
+            data: 
+                [
+                  ["10", #{dataApi.data.scoreMap.ten}], 
+                  ["9", #{dataApi.data.scoreMap.nine}],
+                  ["8", #{dataApi.data.scoreMap.eight}],
+                  ["7", #{dataApi.data.scoreMap.seven}],
+                  ["6", #{dataApi.data.scoreMap.six}],
+                  ["5", #{dataApi.data.scoreMap.five}],
+                  ["4", #{dataApi.data.scoreMap.four}], 
+                  ["3", #{dataApi.data.scoreMap.three}],
+                  ["2", #{dataApi.data.scoreMap.two}], 
+                  ["1", #{dataApi.data.scoreMap.one}],
+                  ["0", #{dataApi.data.scoreMap.zero}],           
+                ]
+              };
+              var s_leftArea_json = {
+                color: [
+                  "#ff7143",
+                  "#ff7f55",
+                  "#ff8d69",
+                  "#ff9b7b",
+                  "#ffaa8e",
+                  "#ffb8a1",
+                  "#ffd4c6",
+                  "#ffe3d9",
+                  "#fff1ec",
+                  "#fff8f5",
+                  "#ffffff",
+                ],
+                //专家评分数据
+                data: [
+                        ["10", #{dataApi.data.expertScoreMap.ten}],
+                        ["9", #{dataApi.data.expertScoreMap.nine}], 
+                        ["8", #{dataApi.data.expertScoreMap.eight}],
+                        ["7", #{dataApi.data.expertScoreMap.seven}],
+                        ["6", #{dataApi.data.expertScoreMap.six}],
+                        ["5", #{dataApi.data.expertScoreMap.five}],
+                        ["4", #{dataApi.data.expertScoreMap.four}],
+                        ["3", #{dataApi.data.expertScoreMap.three}],
+                        ["2", #{dataApi.data.expertScoreMap.two}],
+                        ["1", #{dataApi.data.expertScoreMap.one}], 
+                        ["0", #{dataApi.data.expertScoreMap.zero}],
+                      ]
+              };
+              var rightArea_json = {
+                categories: [
+                '0.1万-',
+                '0.5万-',
+                '0.5万-1万',
+                '1万-3万',
+                '3万-5万',
+                '5万-10万',
+                '10万-30万',
+                '30万-50万',
+                '50万-100万',
+                '100万+'
+                ],
+                //估值数据
+                data:[ #{dataApi.data.valuationMap.one},
+                      #{dataApi.data.valuationMap.two},
+                      #{dataApi.data.valuationMap.three}, 
+                      #{dataApi.data.valuationMap.four},
+                      #{dataApi.data.valuationMap.five},
+                      #{dataApi.data.valuationMap.six},
+                      #{dataApi.data.valuationMap.seven},
+                      #{dataApi.data.valuationMap.eight},
+                      #{dataApi.data.valuationMap.nine},
+                      #{dataApi.data.valuationMap.ten},     
+                    ]
+              };
+              var s_rightArea_json = {
+                  categories: ['0.1万-',
+                          '0.5万-',
+                          '0.5万-1万',
+                          '1万-3万',
+                          '3万-5万',
+                          '5万-10万',
+                          '10万-30万',
+                          '30万-50万',
+                          '50万-100万',
+                          '100万+'
+                ],
+                //专家估值数据
+                data: [
+                      #{dataApi.data.expertValuationMap.one},
+                      #{dataApi.data.expertValuationMap.two},
+                      #{dataApi.data.expertValuationMap.three}, 
+                      #{dataApi.data.expertValuationMap.four},
+                      #{dataApi.data.expertValuationMap.five},
+                      #{dataApi.data.expertValuationMap.six},
+                      #{dataApi.data.expertValuationMap.seven},
+                      #{dataApi.data.expertValuationMap.eight},
+                      #{dataApi.data.expertValuationMap.nine},
+                      #{dataApi.data.expertValuationMap.ten},
+                ]
+              };
+      //var chart = null;
+      $(function() {
+        $('#leftArea').highcharts({
+          chart: {
+            backgroundColor: 'transparent',
+            type: 'pie'
+          },
+          credits: {
+            enabled: false
+          },
+          legend: {
+            width: 180,
+            floating: false,
+            reversed: true,
+            align: 'left',
+            itemWidth: 12,
+            borderWidth: 0,
+            padding: 0,
+            symbolPadding: 1,
+            symbolWidth: 8,
+            symbolHeight: 8,
+            enabled: true,
+            itemStyle: {
+              color: "#999"
+            }
+          },
+          title: {
+            text: '评分人数 ',
+            verticalAlign: 'top',
+            style: {
+              color: "#000",
+              fontSize:16
+            }
+          },
+          subtitle: {
+            text: ''
+          },
+          tooltip: {
+            pointFormat: '评分占比: <b>{point.percentage:.1f}%</b>',
+            headerFormat:'<span style="font-size: 10px">{point.key}分</span><br/>'
+          },
+          plotOptions: {
+            pie: {
+              size: 120,
+              innerSize: 60,
+              colors: leftArea_json.color,
+              dataLabels: {
+                distance: -10,
+                formatter: function() {
+                  return this.y;
+                },
+                style: {
+                  color: '#000',
+                  textShadow:''
+                },
+                enabled: true
+              },
+              showInLegend: true
+            }
+          },
+          series: [{
+            type: 'pie',
+            data: leftArea_json.data,
+           // name: "评分人数",
+            name:leftArea_json.data
+          }]
+        });
+        $('#rightArea').highcharts({
+          legend: {
+            enabled: false
+          },
+          credits: {
+            enabled: false
+          },
+          chart: {
+            backgroundColor: 'transparent',
+            type: 'column'
+          },
+          title: {
+            text: '估值人数条形图',
+            verticalAlign: 'top',
+            style: {
+              color: "#000",
+              fontSize:16
+            }
+          },
+          subtitle: {
+            text: ''
+          },
+          xAxis: {
+            lineColor: '#888',
+            lineWidth: 1,
+            labels:{
+              staggerLines: 1,
+              rotation:90,
+              style:{
+                color: "#000",
+                fontSize:10
+              }
+            },
+            categories: rightArea_json.categories
+          },
+          yAxis: {
+            min: 0,
+            lineColor: '#999',
+            gridLineWidth: 0,
+            lineWidth: 1,
+            title: {
+              text: ''
+            },
+            labels: {
+              enabled: false // Highcharts
+            }
+          },
+          tooltip: {
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+            '<td style="padding:0"><b>{point.y}</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+          },
+          plotOptions: {
+            column: {
+              pointPadding: 0.2,
+              borderWidth: 0,
+              color:'#ff7143',
+              dataLabels: {
+                enabled: true, // dataLabels设为true
+                style: {
+                  color: '#000'
+                }
+              }
+            }
+          },
+          series: [{
+            name: "估值人数",
+            data: rightArea_json.data
+          }]
+        });
+
+        $('#s_leftArea').highcharts({
+          chart: {
+            backgroundColor: 'transparent',
+            type: 'pie'
+          },
+          credits: {
+            enabled: false
+          },
+          legend: {
+            width: 180,
+            floating: false,
+            reversed: true,
+            align: 'left',
+            itemWidth: 12,
+            borderWidth: 0,
+            padding: 0,
+            symbolPadding: 1,
+            symbolWidth: 8,
+            symbolHeight: 8,
+            itemStyle: {
+              color: "#999"
+            }
+          },
+          title: {
+            text: '评分人数',
+            verticalAlign: 'top',
+            style: {
+              color: "#000",
+              fontSize:16
+          }
+        },
+        subtitle: {
+          text: ''
+        },
+        tooltip: {
+          pointFormat: '评分占比: <b>{point.percentage:.1f}%</b>',
+          headerFormat:'<span style="font-size: 10px">{point.key}分</span><br/>'
+        },
+        plotOptions: {
+          pie: {
+            size: 130,
+            innerSize: 60,
+            colors: leftArea_json.color,
+            dataLabels: {
+              distance: -10,
+              formatter: function() {
+                return this.y;
+              },
+              style: {
+                  color: '#000',
+                  textShadow:''
+                },
+                enabled: true
+              },
+              showInLegend: true
+            }
+          },
+          series: [{
+            type: 'pie',
+            data: s_leftArea_json.data,
+            name:"评分人数"
+          }]
+        });
+        $('#s_rightArea').highcharts({
+          legend: {
+            enabled: false
+          },
+          credits: {
+            enabled: false
+          },
+          chart: {
+            backgroundColor: 'transparent',
+            type: 'column'
+          },
+          title: {
+            text: '估值人数条形图',
+            verticalAlign: 'top',
+            style: {
+              //fontWeight: 'bold',,
+              color: "#000",
+              fontSize:16
+            }
+          },
+          subtitle: {
+            text: ''
+          },
+          xAxis: {
+            lineColor: '#888',
+            lineWidth: 1,
+            labels:{
+              staggerLines: 1,
+              rotation:90,
+              style:{
+                color: "#000",
+                fontSize:10
+              }
+            },
+            categories: rightArea_json.categories
+          },
+          yAxis: {
+            min: 0,
+            lineColor: '#888',
+            gridLineWidth: 0,
+            lineWidth: 1,
+            title: {
+              text: ''
+            },
+            labels: {
+              enabled: false // Highcharts
+            }
+          },
+          tooltip: {
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+            '<td style="padding:0"><b>{point.y}</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+          },
+          plotOptions: {
+            column: {
+              pointPadding: 0.2,
+              borderWidth: 0,
+              color:'#ff7143',
+              dataLabels: {
+                enabled: true, // dataLabels设为true
+                style: {
+                  color: '#000'
+                }
+              }
+            }
+          },
+          series: [{
+            name: "估值人数",
+            data: s_rightArea_json.data
+          }]
+        });
+        $(".highcharts-legend-item text").attr("x", 0).attr("y", 5);
+        $(".highcharts-legend-item rect").attr("x", 0).attr("y", -15);
+        $(".highcharts-title text").attr("y", 243);
+      });

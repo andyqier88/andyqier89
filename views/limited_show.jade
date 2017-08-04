@@ -1,0 +1,202 @@
+extends limshow_header
+block content
+  .header_wrapper
+    input(type="hidden" id='arttalkId' value= arttalkId)
+    input(type="hidden" id='unionid' value= unionid)
+    input(type="hidden" id='shareUserId' value= shareUserId)
+    input(type="hidden" id='userId' value= '#{dataApi.data.userId}')
+    input(type="hidden" id='subscribe' value= subscribe)
+    input(type="hidden" id='specialId' value= specialId)
+    include imgUrl
+    .header_left
+      .header_avatar(style="background-image:url(#{imgUrl}#{dataApi.data.iconUrl})")
+        .level 
+          img(src="/ArtWebStatic/images/#{dataApi.data.level}.png")
+      p(style="color: #fff").nickname #{dataApi.data.nickName}
+  - var items = dataApi.data.auctionList 
+  each item ,id in items
+    .list_block
+      a(href="/ArtWeb/auction/?arttalkId=#{item.arttalkId}&shareUserId=#{dataApi.data.userId}" style="display:inline-block;width: 100%;")
+        .img_list_wrap(id=id)
+          each picitem,i in item.picList
+            - for (var i; i < item.picList.length -3; i++)
+            .img_list(style="background-image:url(#{imgUrl}#{picitem.imgUrl})")
+      .tag_wrap
+        -var tag = item.typeName.split(",")
+        span.tag.tag_left #{tag[0]}
+        span.tag.tag_right #{tag[1]}
+        span.author #{item.author} #{item.title}
+      .list_bottom
+        p 当前价：￥
+          span(style="color:#f8754b") #{item.currentPrice}
+        p 结拍剩余：#{item.timeRemaining}
+        a(href="/ArtWeb/auction/?arttalkId=#{item.arttalkId}&shareUserId=#{dataApi.data.userId}").go_detail
+          span 参与出价
+      //- .list_block
+      //-   .img_list
+      //-     span.img(style="background-image:url()")
+      //-   .tag_wrap
+      //-     span.tag.tag_left 绘画
+      //-     span.tag.tag_right 近现代
+      //-     span.author  #{item.author}  #{item.title}
+      //-   .list_bottom
+      //-     p 当前价：￥ 
+      //-       span(style="color:#f8754b") #{item.currentPrice}
+      //-     p 结拍剩余：#{item.timeRemaining}
+      //-     a.go_detail
+      //-       span 参与出价
+  //- 提示下载链接
+  .down_yilun_mask
+  .down_yilun(style="position: fixed;bottom: 0;left: 0")
+    span.appclose#appclose(style="display: inline-block;width: 1.2rem;float: right;margin-bottom: 5px;margin-right: 0.1rem;")
+      img( src="/ArtWebStatic/images/close1.png" style="vertical-align: bottom;")
+    span
+      a#limshow_down(style="display:inline-block")
+        //- a.isapp(href="http://a.app.qq.com/o/simple.jsp?pkgname=com.ybd.yl" style="display:inline-block")
+        img(src="/ArtWebStatic/images/dibu.png" style="vertical-align: bottom;")
+  script(src='/ArtWebStatic/javascripts/jquery.min.1.8.3.js')
+  script(src='/ArtWebStatic/javascripts/sweetalert.min.js')
+  script(src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js")
+  script(src="https://static.mlinks.cc/scripts/dist/mlink.min.js")
+  include wxconfig
+  include APIUrl
+  include DomainUrl
+    script.
+      var specialId = $('#specialId').val();
+      var shareUserId = $('#shareUserId').val();
+      var userId = $('#userId').val();
+      wx.ready(function() {
+        wx.onMenuShareAppMessage({
+          title : '#{dataApi.data.nickName}'+'的专场', // 分享标题
+          desc : '#{dataApi.data.auctionList[0].author}#{dataApi.data.auctionList[0].title}'+'等多件拍品', // 分享描述
+          link : 'https://artworktalk.com/ArtWeb/limshowsq?specialId='+specialId+'&shareUserId='+shareUserId, // 分享链接
+          imgUrl : '#{imgUrl}#{dataApi.data.auctionList[0].picList[0].litimgUrl}', // 分享图标
+          type : 'link', // 分享类型,music、video或link，不填默认为link
+          dataUrl : '', // 如果type是music或video，则要提供数据链接，默认为空
+          success : function() {
+            // 用户确认分享后执行的回调函数
+          },
+          cancel : function() {
+            // 用户取消分享后执行的回调函数
+          }
+        });
+        wx.onMenuShareTimeline({
+          title : '#{dataApi.data.nickName}'+'的专场', // 分享标题
+          desc : '#{dataApi.data.auctionList[0].author}#{dataApi.data.auctionList[0].title}'+'等多件拍品', // 分享描述
+          link : 'https://artworktalk.com/ArtWeb/limshowsq?specialId='+specialId+'&shareUserId='+shareUserId, // 分享链接
+          imgUrl : '#{imgUrl}#{dataApi.data.auctionList[0].picList[0].litimgUrl}', // 分享图标
+          type : 'link', // 分享类型,music、video或link，不填默认为link
+          dataUrl : '', // 如果type是music或video，则要提供数据链接，默认为空
+          success : function() {
+            // 用户确认分享后执行的回调函数
+          },
+          cancel : function() {
+            // 用户取消分享后执行的回调函数
+          }
+        });
+        $(function(){  
+          var imgsurl=[];  
+          var nowurl='';  
+          var imgObj=$(".img_list_wrap img_list");  
+          for(var i=0;i<imgObj.length;i++){  
+            //- console.log("imgObj.length:"+imgObj.length);
+            //- console.log("imgObj:"+imgObj);
+            var strlen = imgObj[i].style.backgroundImage.length-2;
+            imgsurl[i]=imgObj[i].style.backgroundImage.substring(5,strlen);
+              // imgsurl[i]=imgObj[i].src;    "url('"+imgArr[i]+"')";
+              imgObj[i].onclick=function(){  
+                  //nowurl=this.src;  
+                  nowurl=this.style.backgroundImage.substring(5,strlen);  
+                  wx.previewImage({  
+                      current: nowurl,  // 当前显示图片的http链接
+                      urls: imgsurl  // 需要预览的图片http链接列表
+                  });               
+              }  
+            }  
+        });  
+      });
+      window.onload=function(){
+        //下载链接高度
+        var down_yilun = $(".down_yilun").height() + "px";
+        $(".down_yilun_mask").css("height", down_yilun);
+        var ApiUrl = 'http://fengyongpan.s1.natapp.cc';
+        //- var img_list_len0 = $(".img_list_wrap").eq(0).find(".img_list").length -1;
+        //- var img_show_list0 = [];
+        //- var img_show_list1 = [];
+        //- for(var i = 0;i<$(".list_block").length;i++){
+        //-   var img_list_len = $(".img_list_wrap").eq(i).find(".img_list").length -1;
+        //-   for(var j = 0;j<3;j++){
+        //-     img_show_list0.push($(".img_list")[i]) ;
+        //-     $(".img_list_wrap").eq(0).html(img_show_list0);
+        //-   }
+        //- }
+        
+        //- for(var i = 0;i<3;i++){
+        //-   img_show_list1.push($(".img_list_wrap").eq(1).find(".img_list")[i]) ;
+        //-   $(".img_list_wrap").eq(1).html(img_show_list1);
+        //- }
+        //- 浮层显隐
+        var oClose = document.getElementById('appclose');
+
+        oClose.addEventListener('click',function(){
+            this.parentNode.classList.remove('fixShow');
+            window.removeEventListener('scroll',showFix,false);
+        },false);
+        /*下载浮层显隐*/
+        if(document.querySelector('.down_yilun')){
+            window.addEventListener('scroll',showFix,false);
+        }
+
+        function showFix(){
+          var scrollT = document.documentElement.scrollTop || document.body.scrollTop,
+              oFix = document.querySelector('.down_yilun');
+            if(scrollT>2){
+                oFix.classList.add('fixShow');
+            }else{
+                oFix.classList.remove('fixShow') ;
+            };
+        }
+        $(".img_list_wrap").each(function(){
+          if($(this).children().length == 1){
+            $(this).css("width","5rem")
+          }
+          if($(this).children().length == 2){
+            $(this).css("width","10rem")
+          }
+        })
+        var specialId = $('#specialId').val();
+        //跳转详情
+        new Mlink({
+          mlink:'https://ab03ls.mlinks.cc/AcGR?pushType=7&sourceId='+specialId,//短链地址
+          button:document.querySelector('a#limshow_down')
+        }); 
+        //判断app是否存在
+        //- $(".isapp").click(function(){
+        //-   var isAndroid = navigator.userAgent.indexOf('Android') > -1 || navigator.userAgent.indexOf('Linux') > -1; //android终端
+        //-   var isiOS = !!navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+        //-   //- alert('isiOS:'+isiOS)
+        //-   //- alert('isAndroid:'+isAndroid)
+        //-   if(isiOS){
+        //-     //function ios(){
+        //-       var ifr = document.createElement("iframe");
+        //-       ifr.src = "com.yilun://?type=4&id="+specialId; //打开app的协议
+        //-       ifr.style.display = "none"; 
+        //-       document.body.appendChild(ifr);
+        //-       window.setTimeout(function(){
+        //-         document.body.removeChild(ifr);
+        //-         //window.location.href = "http://a.app.qq.com/o/simple.jsp?pkgname=com.ybd.yl"; //下载app的地址
+        //-       },2000)
+        //-     //};
+        //-   }
+        //-   if(isAndroid){
+        //-       var ifr = document.createElement("iframe");
+        //-       ifr.src = "yilun://splash:8888/?type=4&id="+specialId; //打开app的协议
+        //-       ifr.style.display = "none"; 
+        //-       document.body.appendChild(ifr);
+        //-       window.setTimeout(function(){
+        //-         document.body.removeChild(ifr);
+        //-         //window.location.href = "http://a.app.qq.com/o/simple.jsp?pkgname=com.ybd.yl"; //下载app的地址
+        //-       },2000)
+        //-   }
+        //- })
+      }

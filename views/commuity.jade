@@ -1,0 +1,196 @@
+extends commuity_header
+block content
+  .line
+  input(type="hidden" id='circleId' value= circleId)
+  input(type="hidden" id='unionid' value= unionid)
+  input(type="hidden" id='shareUserId' value= shareUserId)
+  include imgUrl
+  .header_wrapper
+    .header_content_wrapper
+      .header_content
+        .header_avatar(style="background-image:url(#{imgUrl}#{dataApi.data.iconUrl})")
+        .level
+          img(src="/ArtWebStatic/images/#{dataApi.data.level}.png")
+        .header_right
+          p(style="color: #646464") #{dataApi.data.userName}
+          - var publishTime = dataApi.data.createTime;
+          p(style="color: #cecece") #{date('m-d H:i',publishTime)}
+  .main(style="margin-top: 0.1rem;padding:0 0.5rem;")
+    p(style="margin-top: 0.5rem; margin-bottom: 0.5rem;font-size: 0.65rem;") #{dataApi.data.text} 
+    .com_image
+      ul
+        - var items = dataApi.data.picList
+        each item in items
+          li
+            img(src='#{imgUrl}'+'#{item.imgUrl}')
+  .comment_like_wrapper
+    .comment_like_header
+      .comment_header.active 评论
+        span #{dataApi.data.commentCount}
+      .like_header 赞
+        span #{dataApi.data.thumbupCount}
+    .comment_content_wrapper.header_content_wrapper
+      - var items = dataApi.data.commentList
+      each item in items
+        .header_content.comment_content
+          .header_avatar(style="background-image:url(#{imgUrl}#{item.iconUrl});position:relative").comment_avatar
+            .level(style="top: 1.5rem;left: 1.5rem;")
+                img(src="/ArtWebStatic/images/#{item.level}.png")
+          .header_right
+            p(style="color: #646464") #{item.userName}
+            -var commentTime =item.createTime
+            p(style="color: #cecece") #{date('m-d H:i',commentTime)}
+            if item.replyUserName == ''
+              p #{item.text}
+            else
+              p #{item.text}
+              p 回复 #{item.replyUserName} #{item.text}
+    .like_content_wrapper
+      -var items = dataApi.data.thumbUpList
+      each item in items
+        .like_content
+          .like_left
+            .header_avatar(style="background-image:url(#{imgUrl}#{item.iconUrl});position:relative")
+              .level(style="top: 0.8rem;left: 1.5rem;")
+                img(src="/ArtWebStatic/images/#{item.level}.png")
+            span(style="padding:0.2rem") #{item.nickName}
+          .like_right
+            -var likeTime =item.createTime
+            span #{date('m-d H:i',likeTime)}
+  //- 提示下载链接
+  .down_yilun_mask
+  .down_yilun(style="position: fixed;bottom: 0;left: 0")
+    span.appclose#appclose(style="display: inline-block;width: 1.2rem;float: right;margin-bottom: 5px;margin-right: 0.1rem;")
+      img( src="/ArtWebStatic/images/close1.png" style="vertical-align: bottom;")
+    span
+      a#commuity_down(style="display:inline-block")
+        //- a.isapp(href="http://a.app.qq.com/o/simple.jsp?pkgname=com.ybd.yl" style="display:inline-block")
+        img(src="/ArtWebStatic/images/dibu.png" style="vertical-align: bottom;")
+  script(src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js")
+  script(src='/ArtWebStatic/javascripts/jquery.min.1.8.3.js')
+  script(src="https://static.mlinks.cc/scripts/dist/mlink.min.js")
+  include wxconfig
+    script.
+      var circleId = $('#circleId').val();
+      var shareUserId = $('#shareUserId').val();
+      wx.ready(function() {
+        wx.onMenuShareAppMessage({
+          title : '艺论--艺海扬帆，论事谈非', // 分享标题
+          desc : '#{dataApi.data.text}'==''?'#{dataApi.data.userName}的圈子':'#{dataApi.data.text}', // 分享描述
+          link :  'https://artworktalk.com/ArtWeb/sq?circleId='+circleId+'&shareUserId='+shareUserId, // 分享链接
+          imgUrl : '#{imgUrl}#{dataApi.data.iconUrl}', // 分享图标
+          type : 'link', // 分享类型,music、video或link，不填默认为link
+          dataUrl : '', // 如果type是music或video，则要提供数据链接，默认为空
+          success : function() {
+            // 用户确认分享后执行的回调函数
+          },
+          cancel : function() {
+            // 用户取消分享后执行的回调函数
+          }
+        });
+        wx.onMenuShareTimeline({
+          title : '艺论--艺海扬帆，论事谈非 #{dataApi.data.userName}的圈子', // 分享标题
+          desc : '艺论--艺海扬帆，论事谈非', // 分享描述
+          link :  'https://artworktalk.com/ArtWeb/sq?circleId='+circleId+'&shareUserId='+shareUserId, // 分享链接
+          imgUrl : '#{imgUrl}#{dataApi.data.iconUrl}', // 分享图标
+          type : 'link', // 分享类型,music、video或link，不填默认为link
+          dataUrl : '', // 如果type是music或video，则要提供数据链接，默认为空
+          success : function() {
+            // 用户确认分享后执行的回调函数
+          },
+          cancel : function() {
+            // 用户取消分享后执行的回调函数
+          }
+        });
+        $(function(){  
+          var imgsurl=[];  
+          var nowurl='';  
+          var imgObj=$(".com_image").find("img");  
+          if(imgObj){
+            for(var i=0;i<imgObj.length;i++){  
+              imgsurl[i]=imgObj[i].src;  
+              imgObj[i].onclick=function(){  
+                  nowurl=this.src;  
+                  wx.previewImage({
+                      current: nowurl,  // 当前显示图片的http链接
+                      urls: imgsurl  // 需要预览的图片http链接列表
+                  });               
+              }  
+            } 
+          }
+           
+        });
+      });
+      window.onload = function(){
+        //评论和赞切换
+        $(".comment_header").click(function(){
+          $(this).addClass("active");
+          $(".like_header").removeClass('active');
+          $(".like_content_wrapper").css('display','none');
+          $(".comment_content_wrapper").css('display',' block');
+        });
+        $(".like_header").click(function(){
+          $(this).addClass("active");
+          $(".comment_header").removeClass('active');
+          $(".like_content_wrapper").css('display','block');
+          $(".comment_content_wrapper").css('display','none');
+        })
+        //下载链接高度
+        var down_yilun = $(".down_yilun").height() + "px";
+        $(".down_yilun_mask").css("height", down_yilun);
+         //- 浮层显隐
+        var oClose = document.getElementById('appclose');
+
+        oClose.addEventListener('click',function(){
+            this.parentNode.classList.remove('fixShow');
+            window.removeEventListener('scroll',showFix,false);
+        },false);
+        /*下载浮层显隐*/
+        if(document.querySelector('.down_yilun')){
+            window.addEventListener('scroll',showFix,false);
+        }
+
+        function showFix(){
+          var scrollT = document.documentElement.scrollTop || document.body.scrollTop,
+              oFix = document.querySelector('.down_yilun');
+            if(scrollT>2){
+                oFix.classList.add('fixShow');
+            }else{
+                oFix.classList.remove('fixShow') ;
+            };
+        }
+        //跳转详情
+        new Mlink({
+          mlink:'https://ab03ls.mlinks.cc/AcGR?pushType=5&sourceId='+circleId,//短链地址
+          button:document.querySelector('a#commuity_down')
+        });
+        //判断app是否存在
+        //- $(".isapp").click(function(){
+        //-   var isAndroid = navigator.userAgent.indexOf('Android') > -1 || navigator.userAgent.indexOf('Linux') > -1; //android终端
+        //-   var isiOS = !!navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+        //-   //- alert('isiOS:'+isiOS)
+        //-   //- alert('isAndroid:'+isAndroid)
+        //-   if(isiOS){
+        //-     //function ios(){
+        //-       var ifr = document.createElement("iframe");
+        //-       ifr.src = "com.yilun://?type=6&id="+circleId; //打开app的协议
+        //-       ifr.style.display = "none"; 
+        //-       document.body.appendChild(ifr);
+        //-       window.setTimeout(function(){
+        //-         document.body.removeChild(ifr);
+        //-         //window.location.href = "http://a.app.qq.com/o/simple.jsp?pkgname=com.ybd.yl"; //下载app的地址
+        //-       },2000)
+        //-     //};
+        //-   }
+        //-   if(isAndroid){
+        //-       var ifr = document.createElement("iframe");
+        //-       ifr.src = "yilun://splash:8888/?type=6&id="+circleId; //打开app的协议
+        //-       ifr.style.display = "none"; 
+        //-       document.body.appendChild(ifr);
+        //-       window.setTimeout(function(){
+        //-         document.body.removeChild(ifr);
+        //-         //window.location.href = "http://a.app.qq.com/o/simple.jsp?pkgname=com.ybd.yl"; //下载app的地址
+        //-       },2000)
+        //-   }
+        //- })
+      }

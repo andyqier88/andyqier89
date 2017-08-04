@@ -1,0 +1,158 @@
+@import url('common.less');
+@header_bg:#303030;
+@header_color:#ffffff;
+@border_color:#e6e6e6;
+@bg_color:#f5f5f5;
+@tip_color:#bcbcbc;
+@active_color:#2ab3d3;
+@blank_color:#f6f6f6;
+@like_color:#646464;
+@main_color:#f8754b; 
+.header_wrapper{
+  background: @header_bg;
+  width: 100%;
+  padding:0.3rem 0.5rem;
+}
+img{
+    width:100%;
+  }
+.header_avatar{
+  border-radius: 50%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 2.1rem;
+  height: 2.1rem;
+  display: inline-block;
+  vertical-align: top;
+  background-size: cover;
+  img{
+    width:100%;
+  }
+}
+.level{
+    position: absolute;
+    left: 2rem;
+    top: 1.8rem;
+    width: 0.6rem;
+}
+.nickname{
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 0.65rem;
+    padding-left: 0.5rem;
+    color: @header_bg;
+    line-height: 2.1rem;
+  }
+.tag_wrap{
+  border-bottom: 1px solid #ccc;
+  margin: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+.tag{
+  margin-right: 0.2rem;  
+  background-repeat: no-repeat;
+  background-position: center;
+  padding: 0.2rem 0.4rem;
+  background-size: contain;
+}
+.tag_left{
+  // background-image: url(/images/biaoqianbg.png);
+  color: @header_color;
+  background: @main_color;
+  display: inline-block;
+  border: 1px solid @main_color;
+}
+.tag_right::after{
+  content: "";
+  width: .3rem;
+    height: .3rem;
+    display: inline-block;
+    background: #fff;
+    position: relative;
+    right: -0.62rem;
+    vertical-align: middle;
+    border-radius: 50%;
+    border-left: 1px solid @main_color;
+}
+.tag_right::before{
+  content: "";
+     width: 0.3rem;
+    height: .3rem;
+    display: inline-block;
+    background: #fff;
+    position: relative;
+    left: -0.65rem;
+    vertical-align: middle;
+    border-radius: 50%;
+    border-right: 1px solid @main_color;
+}
+.tag_left::after{
+  content: "";
+  width: .3rem;
+    height: .3rem;
+    display: inline-block;
+    background: #fff;
+    position: relative;
+    right: -.55rem;
+    vertical-align: middle;
+    border-radius: 50%;
+}
+.tag_left::before{
+  content: "";
+   width: 0.3rem;
+    height: .3rem;
+    display: inline-block;
+    background: #fff;
+    position: relative;
+    left: -0.5rem;
+    vertical-align: middle;
+    border-radius: 50%;
+}
+.tag_right{
+  // background-image: url(/images/biaoqianbr.png);
+  color: @main_color;
+  border: 1px solid @main_color;
+}
+.tag_wrap{
+  font-size: 0.7rem;
+}
+.list_bottom{
+  margin: 0 0.5rem;
+  font-size: 0.65rem;
+  color: #868686;
+  position: relative;
+}   
+.img_list_wrap{
+  display: flex;
+  height: 9rem;
+  margin: 0.4rem;
+}
+.img_list{
+  display: inline-block;
+  background-size: cover;
+  background-position: 50%;
+  flex: 1;
+  margin-right: 0.1rem;
+  margin-left: 0.1rem;
+} 
+.go_detail{
+  position: absolute;
+    right: 0;
+    display: inline-block;
+    border: 1px solid @main_color;
+    padding: .2rem .4rem;
+    border-radius: .8rem;
+    bottom: 0.2rem;
+    color: @main_color;
+}    
+.down_yilun{
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  -webkit-transition: all 1s ease;
+  -webkit-transform: translate3d(0,4rem,0)
+}
+.fixShow{
+  -webkit-transform: translate3d(0,0,0);
+}

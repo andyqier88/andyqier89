@@ -1,0 +1,1281 @@
+extends auction_header
+block content
+  .header_wrapper
+    input(type="hidden" id='arttalkId' value= arttalkId)
+    input(type="hidden" id='unionid' value= unionid)
+    input(type="hidden" id='shareUserId' value= shareUserId)
+    input(type="hidden" id='userId' value= userId)
+    input(type="hidden" id='gzopenId' value= gzopenId)
+    input(type="hidden" id='iconUrl' value= iconUrl)
+    input(type="hidden" id='nickName' value= nickName)
+    input(type="hidden" id='gender' value= gender)
+    input(type="hidden" id='access_token' value= access_token)
+    input(type="hidden" id='loginUser' value= '#{dataApi.data.loginUser}')
+    input(type="hidden" id='mobile' value= '#{dataApi.data.mobile}')
+    input(type="hidden" id='havePayPwd' value= '#{dataApi.data.havePayPwd}')
+    input(type="hidden" id='subscribe' value= subscribe)
+    input(type="hidden" id='state' value= "#{dataApi.data.state}")
+    include imgUrl
+    .header_left
+      .header_avatar(style="background-image:url(#{imgUrl}#{dataApi.data.iconUrl})")
+      .level 
+        img(src="/ArtWebStatic/images/#{dataApi.data.level}.png")
+      p(style="color: #fff;line-height:2.1rem;").nickname #{dataApi.data.nickName}
+  //-轮播图
+  .swiper-container
+    .swiper-wrapper
+      - var items = dataApi.data.picList
+      each item in items
+        .swiper-slide 
+          div(style="background-image:url('#{imgUrl}#{item.imgUrl}');width: 100%;height: 10rem;background-size: cover; background-position: 50%;background-repeat: no-repeat;")
+          //- img(src="#{imgUrl}#{item.imgUrl}")
+    .swiper-pagination
+  h1.author #{dataApi.data.attribute.author}  #{dataApi.data.attribute.title}
+  .content_intro
+    .hack
+    .intro_list.avg_success(style="display:none")
+      if dataApi.data.avgScore
+        .sub_list
+          span 平均分：
+            span #{dataApi.data.avgScore}
+      else
+        .sub_list
+          span 平均分：0
+      if dataApi.data.avgValuation
+        .sub_list
+          span 平均估值：
+            span #{dataApi.data.avgValuation}
+      else
+        .sub_list
+          span 平均估值：0
+    .intro_list
+      if dataApi.data.typeName
+        .sub_list
+          span 来自：
+            span #{dataApi.data.typeName}
+      else
+        .sub_list(style="display:none")
+      if dataApi.data.attribute.texture
+        .sub_list
+          span 质地：
+            span #{dataApi.data.attribute.texture}
+      else
+        .sub_list(style="display:none")
+      //-.intro_list
+      if dataApi.data.attribute.year
+        .sub_list
+          span 年代：
+            span #{dataApi.data.attribute.year}
+      else
+        .sub_list(style="display:none")
+      if dataApi.data.attribute.origin
+        .sub_list
+          span 产地：
+            span #{dataApi.data.attribute.origin}
+      else
+        .sub_list(style="display:none")
+      //- .intro_list
+      if dataApi.data.attribute.diameter 
+        .sub_list
+          span 直径：
+            span #{dataApi.data.attribute.diameter}cm
+      else
+        .sub_list(style="display:none")
+      if dataApi.data.attribute.weight
+        .sub_list
+          span 重量：
+            span #{dataApi.data.attribute.weight}g
+      else
+        .sub_list(style="display:none")
+      //- .intro_list
+      if dataApi.data.attribute.length||dataApi.data.attribute.width||dataApi.data.attribute.height
+        .sub_list
+          span 尺寸：
+            if dataApi.data.attribute.length  
+              |长#{dataApi.data.attribute.length}cm 
+            else 
+              |长(0)cm 
+            if dataApi.data.attribute.width 
+              |*宽#{dataApi.data.attribute.width}cm 
+            else 
+              |*宽(0)cm 
+            if dataApi.data.attribute.height  
+              |*高#{dataApi.data.attribute.height}cm
+            else 
+              |*高(0)cm
+            if dataApi.data.attribute.amount
+              |*条屏#{dataApi.data.attribute.amount}
+            else 
+              span(style="display:none")
+      else
+        .sub_list(style="display:none")
+      if dataApi.data.attribute.flaw
+        .sub_list
+          span 瑕疵说明：
+            span #{dataApi.data.attribute.flaw}
+      else
+        .sub_list(style="display:none")
+    if dataApi.data.attribute.description
+      .intro_list
+        .sub_list(style="width:100%")
+          span 详情：
+          span #{dataApi.data.attribute.description}
+    else
+        .intro_list(style="display:none")
+    a.record(href="/ArtWeb/data_statistic?arttalkId=#{arttalkId}&userId=#{dataApi.data.loginUser}")
+      span.record_img
+        img(src="/ArtWebStatic/images/shuju.png")
+      span 作品数据
+  //- 拍卖纪录
+  .auction_record
+    h2(style="position:relative") 拍卖纪录
+      span.arrow_down_(style="width: 0.55rem;display: inline-block;position: absolute;right: 0rem;padding:0.5rem;top:0;transform: rotate(45deg);")
+        //- img(src="../images/shuju.png")
+        span(style="display: inline-block;width: 0.5rem;border: 1px solid #ccc;height: 0.5rem;border-bottom: none;border-right: none;")
+    div.record_wrap(style="height:5rem;overflow:hidden")
+      table#priceRecord(style="display:table")
+        - var items = dataApi.data.bidRecordList
+        each item in items
+          tr
+            td #{item.nickName}
+            if item.type == 1
+              td 加价
+            else if item.type == 2
+              td 委托
+            td 出局
+            td #{item.bidPrice}
+  //- 评论和赞
+  .comment_like_wrapper
+    .comment_like_header
+      .comment_header.active 评论
+        span(style="margin-left:0.15rem") #{dataApi.data.commentCount}
+      .like_header 赞
+        span(style="margin-left:0.15rem") #{dataApi.data.thumbupCount} 
+    .comment_content_wrapper.header_content_wrapper
+      - var items = dataApi.data.commentList
+      each item in items
+        .header_content.comment_content
+          .header_avatar(style="background-image:url(#{imgUrl}#{item.iconUrl});position:relative").comment_avatar
+            .level(style="left: 1.5rem;top: 1.5rem;") 
+              img(src="/ArtWebStatic/images/#{item.level}.png")
+          .header_right
+            p(style="color: #646464") #{item.userName}
+            -var commentTime =item.createTime
+            p(style="color: #cecece") #{date('m-d H:i',commentTime)}
+            if item.replyUserName == ''
+              p #{item.text}
+            else
+              p #{item.text}
+              p 回复 #{item.replyUserName} #{item.text}
+    .like_content_wrapper
+      - var items = dataApi.data.thumbUpList
+      each item in items
+        .like_content
+          .like_left
+            .header_avatar(style="background-image:url(#{imgUrl}#{item.iconUrl});position:relative")
+              .level(style="left: 1.5rem;top: 0.8rem;")  
+                img(src="/ArtWebStatic/images/#{item.level}.png")
+            span(style="padding:0.2rem") #{item.nickName}
+          .like_right
+            -var likeTime =item.createTime
+            span #{date('m-d H:i',likeTime)}
+  .btn_wrapper.wj_wraper(id="66")
+    .btn_left 竞价委托
+    .btn_right 立即出价
+    //- 买家
+  if dataApi.data.loginUser==dataApi.data.buyerId
+    .btn_wrapper
+      .buycallus 联系艺论
+      .buyoffline 线下交易
+      //- 卖家
+  if dataApi.data.loginUser==dataApi.data.userId && dataApi.data.state == 3
+    .btn_wrapper.seller_self
+      .sellcallus 联系艺论
+      .selloffline 线下交易
+  //-委托弹窗
+  .modal_wrapper.wtmodal_
+    .modal_weituo.mo_wt 
+      .modal_close.modal_weituo_close_
+        img(src="/ArtWebStatic/images/close.png")
+      .modal_title
+        p(style="padding:0.5rem;") 您的当前委托价
+        p.wt_price(style="color:#ff7143") 
+      .modal_content
+        p(style="padding:0.5rem 0") 本次需支付保证金 
+          span(style="color:#ff7143").fee_ 
+        p(style="color:#bcbcbc;padding:0.5rem 0")
+          span.jinbi_yue 金币余额
+            span.usableCoin_
+          span.conut_yue 账户余额
+            span.usableMoney_
+        p(style="color:#bcbcbc;padding:0.5rem 0") (1金币=1元人民币，优先使用金币支付)
+        .less_money_
+      .modal_tip
+        span(style="text-align:left;vertical-align:top;") *
+        .tip_word 
+          p 若交易成功，我们将扣除您的保证金作为本次拍卖的佣金；
+          p(style="padding-bottom:0.2rem")  若交易失败，我们将及时推送消息给您，并返还您的保证金。
+      .modal_footer
+        button.wtpay.change_ 立即支付
+  //-出价弹框
+  .modal_wrapper.wtmodal
+    .modal_weituo
+      .modal_close.modal_weituo_close 
+        img(src="/ArtWebStatic/images/close.png")
+      .modal_title
+        p(style="padding:0.5rem;") 您的当前出价
+        p.bidPrice(style="color:#ff7143")
+      .modal_content
+        p(style="padding:0.5rem 0") 本次需支付保证金 
+          span(style="color:#ff7143").fee 
+        p(style="color:#bcbcbc;padding:0.5rem 0")
+          span.jinbi_yu_e 金币余额
+            span.usableCoin
+          span.conut_yu_e 账户余额
+            span.usableMoney
+        p(style="color:#bcbcbc;padding:0.5rem 0") (1金币=1元人民币，优先使用金币支付)
+        .less_money
+      .modal_tip
+        span(style="text-align:left;vertical-align:top;") *
+        .tip_word 
+          p 若交易成功，我们将扣除您的保证金作为本次拍卖的佣金；
+          p(style="padding-bottom:0.2rem")  若交易失败，我们将及时推送消息给您，并返还您的保证金。
+      .modal_footer
+        button.cjpay.change 立即充值
+        button(style="display:none;") 前往APP充值
+  //- 关注公众号
+  .modal_wrapper.gzmodal
+    .modal_gz
+      .gz_close(style="position: absolute;top: .5rem; right:0.5rem;width: 1.3rem")
+        img(src="/ArtWebStatic/images/close1.png")
+      .gzimg(style="display: flex;justify-content: center;align-items: center;")
+        img(src="/ArtWebStatic/images/gz.png" style="margin-top:5rem;width:10rem")
+      p(style="text-align: center;color: #fff;margin-top: 1rem;font-size:0.6rem") 推送消息获取长按关注
+  //-手机注册
+  .modal_wrapper.phmodal
+    .modal_phone
+      .modal_phone_close(style="position: absolute;top: .5rem; left:0.5rem;width: 1.3rem")
+        img(src="/ArtWebStatic/images/close.png")
+      .modal_confim 确定
+      .modal_title 
+        p 绑定手机号
+      .modal_phone_content
+        ul
+          li
+            input(placeholder = "请输入手机号" type="number" id="phone")
+          li
+            input(placeholder = "请输入验证码" type="number" style="width:70%" id="code") 
+            input(type="button" style="color:#ff7143" value="获取验证码").sendCode 
+          li
+            input(placeholder = "设置6位支付密码" type="password" id="pass")
+          li
+            input(placeholder = "请再次输入支付密码" type="password" id="passagain")
+  style.
+    .wxpay_wraper{
+      position: fixed;
+      top: 0;
+      z-index: 1;
+      left: 0;
+      right: 0;
+      background: #f3f3f3;
+      bottom: 0;
+      font-size: 0.7rem;
+    }
+    .wxpay_num{
+      display:flex;
+      margin-top:0.6rem;
+      margin-bottom:0.6rem;
+      margin-left: -0.5rem;
+    }
+    .wxpay_num p{
+      flex:1;
+      text-align: center;
+    }
+    .wxpay_num input{
+      width:0.2rem;
+      margin-left:-0.2rem;
+      opacity:0;
+    }
+    .wxpay_num p a{
+      padding: 0.4rem 1.3rem;
+      border-radius: 0.15rem;
+      color: #646464;
+      border:1px solid #ccc;
+      display: inline-block;
+      width: 1.5rem;
+      font-size: 0.65rem;
+    }
+    .wxpay_num p a:hover{
+      background: #f8754b;
+      color:#fff;
+      border:none;
+    }
+    input:checked ~ label a{
+      background: #f8754b;
+      color:#fff;
+      border:none;
+    }
+    .wxpay_title{
+      padding-top: 0.5rem;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 0.6rem;
+    }
+  //-充值弹窗(style="display:none;")
+  .wxpay_wraper(style="display:none")
+    div(style="padding-left:0.5rem;background: #fff;padding-bottom: 0.5rem;border-top: 1px solid #ececec;border-bottom: 1px solid #ececec;") 
+      .modal_close.modal_change_close
+        img(src="/ArtWebStatic/images/close.png") 
+      p.wxpay_title 请选择充值金额
+      .wxpay_num
+        p
+          input(value="30" type="radio" checked='true' style="" id="first" name="check")
+          label(for="first")
+            a 30
+        p
+          input(value="50" type="radio" style="" id="se" name="check")
+          label(for="se")
+            a 50
+        p
+          input(value="100" type="radio" style="" id="th" name="check")
+          label(for="th")
+            a 100
+      .wxpay_num
+        p
+          input(value="200" type="radio" style="" id="fo" name="check")
+          label(for="fo")
+            a 200
+        p
+          input(value="300" type="radio" style="" id="fi" name="check")
+          label(for="fi")
+            a 300
+        p
+          input(value="500" type="radio" style="" id="si" name="check")
+          label(for="si")
+            a 500
+      .free_change(style="padding-right:0.5rem;")
+        span 自定义金额：
+        input(type="text" style="border-bottom:1px solid #ccc" id="free_change")
+    div(style="padding-left:0.5rem;background: #fff;margin-top: 0.5rem;padding-bottom: 0.5rem;border-top: 1px solid #ececec;border-bottom: 1px solid #ececec;")
+      p.wxpay_title 请选择支付方式
+      .wxpay
+        a(style="display:inline-block;")
+          img(src="/ArtWebStatic/images/wxpay_logo.png")
+  //- 提示下载链接
+  .down_yilun_mask
+  .down_yilun
+    span.appclose#appclose(style="display: inline-block;width: 1.2rem;float: right;margin-bottom: 5px;margin-right: 0.1rem;")
+      img( src="/ArtWebStatic/images/close1.png" style="vertical-align: bottom;")
+    span
+      a#auction_down(style="display:inline-block")
+        //- a.isapp(href="http://a.app.qq.com/o/simple.jsp?pkgname=com.ybd.yl" style="display:inline-block")
+        img(src="/ArtWebStatic/images/dibu.png" style="vertical-align: bottom;")
+  script(src='/ArtWebStatic/javascripts/jquery.min.1.8.3.js')
+  script(src='/ArtWebStatic/javascripts/swiper-3.4.2.jquery.min.js')
+  script(src='/ArtWebStatic/javascripts/rangeSlide.js')
+  script(src='/ArtWebStatic/javascripts/hammer.js')
+  script(src='/ArtWebStatic/javascripts/md5.min.js')
+  script(src='/ArtWebStatic/javascripts/sweetalert.min.js')
+  script(src="https://res.wx.qq.com/open/js/jweixin-1.2.0.js")
+  script(src="https://static.mlinks.cc/scripts/dist/mlink.min.js")
+  include wxconfig
+  include APIUrl
+    script.
+      var arttalkId = $('#arttalkId').val();
+      var shareUserId = $('#shareUserId').val();
+      var userId = $('#userId').val();
+      var loginUser = $('#loginUser').val();
+      var code = $('#code').val();
+      var pass = $('#pass').val();
+      var passagain = $('#passagain').val();
+      var phone = $('#phone').val();
+      var subscribe = $('#subscribe').val();
+      console.log(phone)
+      var pass_md = md5(pass);
+      wx.ready(function() {
+        var str = "【快来捡漏吧】";
+        if("#{dataApi.data.attribute.title}"){
+          str += "【作品：#{dataApi.data.attribute.title}】";
+        }
+        if("#{dataApi.data.attribute.author}"){
+          str += "【作者：#{dataApi.data.attribute.author}】";
+        }
+        if('#{dataApi.data.attribute.year}'){
+          str += "【年代：#{dataApi.data.attribute.year}】";
+        }
+        if("#{dataApi.data.attribute.texture}"){
+          str += "【质地：#{dataApi.data.attribute.texture}】";
+        }
+        //- var picList = dataApi.data.picList[0].litimgUrl;
+        //- console.log(picList);
+        //alert('#{imgUrl}#{dataApi.data.picList[0].litimgUrl}')
+          $("#free_change").focusin(function(){
+            $(".wxpay_num input:checked").attr("checked",false)
+          });
+          $("#free_change").focusout(function(){
+            var free_change = $("#free_change").val();
+            if(free_change.replace(/ /g,'')>'0'){
+              $(".wxpay_num input:checked").attr("checked",false)
+            }else{
+              $("#first").attr("checked",true)
+            }
+          })
+          //微信充值
+          var unionid = $("#unionid").val();
+          //if(unionid =='oPbarwU5SqHRmIdvBrQq470cSvGs'){
+            $(".wxpay").click(function(){
+            console.log("ee");
+            var userId = $('#loginUser').val();
+            //- var loginUser = $('#loginUser').val();
+            console.log(userId);
+
+            var change_price = $(".wxpay_num input:checked").val();
+            
+            var free_change = $("#free_change").val();
+            if(free_change.replace(/ /g,'')>'0'){
+              change_price = free_change;
+            }else{
+              change_price = change_price;
+            }
+            console.log(change_price);
+            $.post(ApiUrl+'/WebApi/unifiedorder',{userId:userId,price:change_price},function(data){
+              console.log(change_price);
+              console.log(data);
+              wx.chooseWXPay({
+                timestamp: data.data.timeStamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
+                nonceStr: data.data.nonceStr, // 支付签名随机串，不长于 32 位
+                package: data.data.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=***）
+                signType: 'MD5', // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
+                paySign: data.data.sign, // 支付签名
+                success: function (res) {
+                  console.log(res)
+                  console.log("success")
+                  swal({title:'支付成功',confirmButtonText: "我知道了"})  
+                  window.location.href=window.location.href+"?id="+66;
+                },
+                fail:function(res){
+                  console.log(res)
+                  swal({title:'支付失败',confirmButtonText: "我知道了"})
+                  console.log(res.errMsg)
+                },
+                cancel:function(res){
+                  console.log(res)
+                  console.log(res.errMsg)
+                  swal({title:'您已取消支付了',confirmButtonText: "我知道了"})
+                }
+            });
+            });
+          });
+          //}
+          
+        wx.onMenuShareAppMessage({
+          title : '典藏臻品，该出手时就出手！', // 分享标题
+          desc : str, // 分享描述
+          link : 'https://artworktalk.com/ArtWeb/auctionsq?shareUserId='+loginUser+'&arttalkId='+arttalkId, // 分享链接
+          imgUrl : '#{imgUrl}#{dataApi.data.picList[0].litimgUrl}', // 分享图标
+          type : 'link', // 分享类型,music、video或link，不填默认为link
+          dataUrl : '', // 如果type是music或video，则要提供数据链接，默认为空
+          success : function() {
+            // 用户确认分享后执行的回调函数
+          },
+          cancel : function() {
+            // 用户取消分享后执行的回调函数
+          }
+        });
+        wx.onMenuShareTimeline({
+          title : str, // 分享标题
+          link : 'https://artworktalk.com/ArtWeb/auctionsq?arttalkId='+arttalkId+'&shareUserId='+loginUser, // 分享链接
+          imgUrl : '#{imgUrl}#{dataApi.data.picList[0].litimgUrl}', // 分享图标
+          type : 'link', // 分享类型,music、video或link，不填默认为link
+          dataUrl : '', // 如果type是music或video，则要提供数据链接，默认为空
+          success : function() {
+            // 用户确认分享后执行的回调函数
+          },
+          cancel : function() {
+            // 用户取消分享后执行的回调函数
+          }
+        });
+        wx.error(function(res){
+          console.log('wx.error:'+res)
+          // config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名。
+      });
+        $(function(){  
+          var imgsurl=[];
+          var imgsurl_ios = [];  
+          var nowurl='';  
+          var imgObj=$(".swiper-slide div");  
+          for(var i=0;i<imgObj.length;i++){  
+              var strlen_an = imgObj[i].style.backgroundImage.length-2;
+              imgsurl[i]=imgObj[i].style.backgroundImage.substring(5,strlen_an);
+              
+              var strlen_ios = imgObj[i].style.backgroundImage.length-1;
+              imgsurl_ios[i]=imgObj[i].style.backgroundImage.substring(4,strlen_ios);
+              
+              imgObj[i].onclick=function(){
+                  if(/android/i.test(navigator.userAgent)){
+                    nowurl=this.style.backgroundImage.substring(5,strlen_an);
+                    //alert(nowurl);
+                    //alert("anzhuo");
+                    wx.previewImage({  
+                      current: nowurl,  // 当前显示图片的http链接
+                      urls: imgsurl  // 需要预览的图片http链接列表
+                    });
+                  }else if(/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)){
+                    nowurl=this.style.backgroundImage.substring(4,strlen_ios);  
+                    //alert("ios")
+                    //alert(nowurl)
+                    wx.previewImage({  
+                      current: nowurl,  // 当前显示图片的http链接
+                      urls: imgsurl_ios  // 需要预览的图片http链接列表
+                    }); 
+                  }
+                               
+              }  
+            }  
+        });  
+      });
+      window.onload=function(){
+        var mySwiper = new Swiper ('.swiper-container', {
+          loop: false,
+          // 如果需要分页器
+          pagination: '.swiper-pagination'
+        });
+        //var ApiUrl = 'http://fengyongpan.s1.natapp.cc';
+        //评论和赞切换
+        $(".comment_header").click(function(){
+          $(this).addClass("active");
+          $(".like_header").removeClass('active');
+          $(".like_content_wrapper").css('display','none');
+          $(".comment_content_wrapper").css('display',' block');
+        });
+        $(".like_header").click(function(){
+          $(this).addClass("active");
+          $(".comment_header").removeClass('active');
+          $(".like_content_wrapper").css('display','block');
+          $(".comment_content_wrapper").css('display','none');
+        });
+        $("tr").eq(0).find("td").eq(2).text("领先");
+        
+        //拍卖纪录展开隐藏.addClass("animated rotateIn")
+        var record_len = $("#priceRecord").find("tr").length;
+          if(record_len<3){
+            $("#priceRecord").css({"height":"auto","overflow":"auto"});
+          }else{
+            $("#priceRecord").css({"height":"5rem","overflow":"hidden"});
+          }
+          $(".arrow_down_").toggle(function(){
+            $(".record_wrap").css({"height":"auto","overflow":"auto"});
+            $(".arrow_down_").css({"top":"-0.5rem","-webkit-transform":"rotate(225deg)"});
+          }, function(){
+            $(".record_wrap").css({"height":"5rem","overflow":"hidden"});
+            $(".arrow_down_").css({"top":"0rem","-webkit-transform":"rotate(45deg)"});
+          });
+          //下载链接高度
+          var down_yilun = $(".down_yilun").height() + "px";
+          $(".down_yilun_mask").css("height", down_yilun);
+          
+            //- 浮层显隐
+          var oClose = document.getElementById('appclose');
+
+          oClose.addEventListener('click',function(){
+              this.parentNode.classList.remove('fixShow');
+              window.removeEventListener('scroll',showFix,false);
+          },false);
+          //关闭充值弹窗
+          $(".modal_change_close").click(function(){
+            $(".wxpay_wraper").css("display","none")
+          });
+          //关闭公众号
+          $(".gz_close").click(function(){
+            $(".gzmodal").css("display","none")
+          })
+          /*下载浮层显隐*/
+          if(document.querySelector('.down_yilun')){
+              window.addEventListener('scroll',showFix,false);
+          }
+
+          function showFix(){
+            var scrollT = document.documentElement.scrollTop || document.body.scrollTop,
+                oFix = document.querySelector('.down_yilun');
+              if(scrollT>2){
+                  oFix.classList.add('fixShow');
+              }else{
+                  oFix.classList.remove('fixShow') ;
+              };
+          }
+          //拍卖状态
+          var state = $("#state").val();
+          if(state == 3){//成功
+            $(".wj_wraper").css("display","none");
+            $(".avg_success").css("display","flex");
+          }else if(state == 2){//流拍
+            $(".wj_wraper").css("display","none");
+            $(".avg_success").css("display","none");
+          }else if(state == 1){//拍卖中
+            $(".avg_success").css("display","flex");
+            $(".wj_wraper").css("display","flex");
+          }
+          //卖家
+          if('#{dataApi.data.loginUser}' =='#{dataApi.data.userId}'){
+            //$(".seller_self").css("display","none");
+            $(".wj_wraper").css("display","none");
+            $(".sellcallus").click(function(){
+              swal({
+              title:"联系艺论",
+              text:"<span style='font-size:0.6rem'>电话:</span><a style='color:#f8754b;font-size:0.6rem' href=tel:#{dataApi.data.callCenter}>#{dataApi.data.callCenter}</a>(点击可拨打)",
+              confirmButtonText: "我知道了",
+              html: true})
+            })
+            $(".selloffline").click(function(){
+              swal({
+              title:"线下交易",
+              text:"<span style='font-size:0.6rem'>买家昵称:#{dataApi.data.buyerNickName}</span> </br> 联系电话: <a style='color:#f8754b;font-size:0.6rem' href=tel:#{dataApi.data.buyerMobile}>#{dataApi.data.buyerMobile}</a>(点击可拨打)",
+              confirmButtonText: "我知道了",
+              html: true})
+            })
+          }
+          //买家
+          if('#{dataApi.data.buyerId}' =='#{dataApi.data.loginUser}'){
+            $(".seller_self").css("display","flex");
+            //$(".wj_wraper").css("display","none");
+            $(".buycallus").click(function(){
+              swal({
+              title:"联系艺论",
+              text:"<span style='font-size:0.6rem'>电话:</span><a style='color:#f8754b;font-size:0.6rem' href=tel:#{dataApi.data.callCenter}>#{dataApi.data.callCenter}</a>(点击可拨打)",
+              confirmButtonText: "我知道了",
+              html: true})
+            })
+            $(".buyoffline").click(function(){
+            swal({
+            title:"线下交易",
+            text:"<span style='font-size:0.6rem'>卖家昵称:#{dataApi.data.sellerNickName}</span> </br> 联系电话: <a style='color:#f8754b;font-size:0.65rem' href=tel:#{dataApi.data.sellerMobile}>#{dataApi.data.sellerMobile}</a>(点击可拨打)",
+            confirmButtonText: "我知道了",
+            html: true})
+            })
+          }
+          //密码6位数字
+          $("#pass").blur(function(){
+            var pass = $('#pass').val();
+            var reg = new RegExp(/^\d{6}$/);
+            var sixpass =  reg.test(pass);
+            if(!sixpass){
+              swal({title:"必须输入6位数字",confirmButtonText: "我知道了"}); 
+            }
+          })
+          $("#passagain").blur(function(){
+            if(!(pass == passagain)){
+              swal({title:"两次密码不一样重新输入",confirmButtonText: "我知道了"}); 
+              $("#passagain").val()="";
+              $("#pass").val()="";
+            }
+          })
+        //委托竞价事件
+        var havePayPwd = $("#havePayPwd").val();
+        var mobile = $("#mobile").val();
+        $(".btn_left").click(function(){
+          console.log(mobile);
+          console.log(havePayPwd==1);
+          //- console.log(!(mobile)||!(havePayPwd));
+          var subscribe = $('#subscribe').val();
+          console.log(subscribe)
+          //判断是否关注公众号
+          //if(subscribe){
+            if(!(mobile&&havePayPwd==1)){
+              $(".phmodal").css("display","block");
+              $(".sendCode").click(function(){
+              //判断手机号合法性
+              var phone = $('#phone').val();
+                console.log(phone)
+              if(!(/^1[34578]\d{9}$/.test(phone))){ 
+                  swal({title:"手机号码有误",confirmButtonText: "我知道了"}); 
+                  $("#phone").focus(); 
+                  return false; 
+              } else{
+                var phone = $('#phone').val();
+                console.log(phone)
+                $.post(ApiUrl+"/WebApi/sendCode",{target:phone,type:1},
+                  function(data){
+                    if(data.code==100){
+                      //alert(data.msg)
+                       var countdown=60;
+                      function time(o) {  
+                        if (countdown == 0) {  
+                            $(".sendCode").removeAttr("disabled");            
+                            $(".sendCode").attr("value","获取验证码");  
+                            $(".sendCode").removeClass("sendCodedis"); 
+                            countdown=60;  
+                        } else {  
+                            $(".sendCode").attr("disabled", true);  
+                            $(".sendCode").attr("value","重新发送(" + countdown + ")"); 
+                            $(".sendCode").addClass("sendCodedis");
+                            countdown--;  
+                            setTimeout(function() {  
+                                time(this)  
+                            },  
+                            1000)  
+                        }  
+                    } 
+                    time(this) 
+                    //document.getElementById("btn").onclick=function(){time(this);}  
+                    }else if(data.code==401){
+                      swal({title:"请勿频繁发送",confirmButtonText: "我知道了"}); 
+                    }
+                    console.log(data)
+                  })
+                }//end判断手机号合法性
+                
+              });
+              $(".modal_confim").click(function(){
+                var pass = $('#pass').val();
+                var passagain = $('#passagain').val();
+                var code = $('#code').val();
+                var phone = $('#phone').val();
+                var reg = new RegExp(/^\d{6}$/);
+                var sixpass =  reg.test(pass);
+                if(!phone==''&&!code==''&&!pass==''&&!passagain==''&&(passagain==pass)&&sixpass){
+                console.log("userId:"+loginUser);
+                console.log("mobile:"+phone);
+                console.log("code:"+code);
+                var pass_md = md5(pass);
+                var unionid = $("#unionid").val();
+                  var gzopenId = $("#gzopenId").val();
+                  var iconUrl = $("#iconUrl").val();
+                  var nickName = $("#nickName").val();
+                  var gender = $("#gender").val();
+                console.log("payPwd:"+pass_md);
+                  if(!(/^1[34578]\d{9}$/.test(phone))){
+                    swal({title:"手机号码有误",confirmButtonText: "我知道了"}); 
+                    $("#phone").focus(); 
+                    return false; 
+                  }else{
+                    $.post(ApiUrl+"/WebApi/bindingMobile",{unionid:unionid,gzopenId:gzopenId,iconUrl:iconUrl,nickName:nickName,gender:gender,mobile:phone,code:code,payPwd:pass_md},
+                      function(data){
+                      console.log(data);
+                        console.log(data.code);
+                          var backcode = data.code;
+                          switch(backcode)
+                            {
+                            case "100":
+                              swal({title: "绑定成功",  timer: 1000,showConfirmButton: false });
+                              $(".phmodal").css("display","none");
+                              window.location.href=window.location.href+"?id="+66;
+                              break;
+                            case "102":
+                              swal({title:"字段为空",confirmButtonText: "我知道了"})
+                              break;
+                            case "101":
+                              swal({title:"系统错误",confirmButtonText: "我知道了"})
+                              break;
+                            case "501":
+                              swal({title:"验证码无效",confirmButtonText: "我知道了"})
+                              break;
+                            case "502":
+                              swal({title:"验证码超过验证时间",confirmButtonText: "我知道了"})
+                              break;
+                            case "503":
+                              swal({title:"验证码无效",confirmButtonText: "我知道了"})
+                              break;
+                            }
+                      }
+                    )
+                  }
+                }else{
+                  swal({title:'提交信息不全或密码不一致',confirmButtonText: "我知道了"})
+                }
+              });
+            }else {
+              swal({
+                title: "自动竞价 一步到位",
+                text: "当输入预设价格后，当有人出价高于您当前出价却低于您的预设价格，系统将自动为您竞价；若有人出价高于您的预设价格，我们将为您推送消息。",
+                showCancelButton: false,
+                closeOnConfirm: false,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "我知道了"
+              },
+              function(){
+                swal({
+                  title: "设置委托",
+                  type: "input",
+                  confirmButtonText: "委托",
+                  cancelButtonText: "关闭",
+                  showCancelButton: true,
+                  closeOnConfirm: false,
+                  animation: "slide-from-top",
+                  inputPlaceholder: "请输入委托价格",
+                },
+                function(inputValue){
+                  if (inputValue === false) return false;
+                  
+                  if (inputValue === ""){
+                    swal.showInputError("必须输入委托价格");
+                    return false
+                  }
+                  var reg = new RegExp(/^\d{1,9}$/);
+                  var inputVal =  reg.test(inputValue);
+                  if(!inputVal){
+                    swal.showInputError("委托价格超限额");
+                    return false
+                  }
+                  //- $(".wtmodal_").css("display","block");
+                  var price = inputValue;
+                  $(".wt_price").text(price);
+                  var unionid = $("#unionid").val();
+                  var getEntrustFee = ApiUrl+"/WebApi/getEntrustFee?unionid="+unionid+"&arttalkId="+arttalkId+"&price="+price;
+                  console.log(getEntrustFee)
+                  
+                  $.get(getEntrustFee,
+                    function(data){
+                      console.log(data);
+                      
+                      switch(data.code)
+                            {
+                            case "100":
+                              var fee = data.data.fee;
+                              var usableCoin = data.data.usableCoin;
+                              var usableMoney = data.data.usableMoney;
+                              var total_count = usableCoin+usableMoney;
+                              //var priceVia = Math.ceil(price);
+                              //var feeVia = Math.ceil(fee);
+                              //var feeVia = Math.round(fee*100)/100;
+                              $(".fee_").text(fee);
+                              $(".usableCoin_").text("（"+usableCoin+"）");
+                              $(".usableMoney_").text("（"+usableMoney+"）");
+                              $(".wtpay").removeClass("change_");
+                              $(".wtpay").addClass("payByyue");
+                              $(".payByyue").text("立即支付");
+                              //余额充足支付
+                              $(".payByyue").click(function(){
+                              //支付密码弹窗
+                              swal({
+                                  title: "请输入支付密码",
+                                  text:"支付金额"+fee,
+                                  type: "input",
+                                  inputType:"password",
+                                  confirmButtonText: "确定",
+                                  cancelButtonText: "取消",
+                                  showCancelButton: true,
+                                  closeOnConfirm: false,
+                                  animation: "slide-from-top",
+                                  inputPlaceholder: "请输入支付密码",},function(inputValue){
+                                    if (inputValue === false) return false;
+                                    
+                                    if (inputValue === ""){
+                                      swal.showInputError("必须输入支付密码");
+                                      return false
+                                    }
+                                      var payPwd = md5(inputValue);
+                                      var wt_price= $(".wt_price").text();
+                                      console.log(wt_price);
+                                      var unionid = $("#unionid").val();
+                                      console.log(unionid);
+                                      console.log(arttalkId);
+                                      console.log(payPwd);
+
+                                      $.post(ApiUrl+"/WebApi/auctionEntrust",{unionid:unionid,arttalkId:arttalkId,price:wt_price,payPwd:payPwd},
+                                      function(data){
+                                        console.log(data)
+                                          switch(data.code){
+                                            case"100": 
+                                              swal({title:"支付成功",confirmButtonText: "我知道了"});
+                                              //委托渲染到拍卖记录
+                                              var record_pm = data.data;
+                                              console.log("record_pm:"+record_pm);
+                                              var tbodys = "";
+                                              $.each(record_pm,function(index,obj){
+                                                console.log("obj:"+obj);
+                                                if(obj.type==1){
+                                                  var  type_sub ="加价";
+                                                }else if(obj.type==2){
+                                                  var  type_sub ="委托";
+                                                }
+                                                var trs = "";
+                                                var tbody = $("#priceRecord").find("tbody")
+                                                  trs += "<tr><td>" + obj.nickName + "</td> <td>" + type_sub + "</td><td>"+"领先" + "</td><td>" + obj.bidPrice + "</td></tr>";
+                                                  tbodys += trs;
+                                                  //console.log(tbodys)
+                                               tbody.html(tbodys);
+                                              })
+                                              $(".wtmodal_").css("display","none")
+                                              window.location.href=window.location.href+"?id="+66;
+                                            break;
+                                            case"302":
+                                              swal({title:"支付密码不正确",confirmButtonText: "我知道了"})
+                                            break;
+                                            case"306":
+                                              swal({title:"委托价低于当前价",confirmButtonText: "我知道了"})
+                                            break;
+                                            case"307":
+                                              swal({title:"委托还未失效",confirmButtonText: "我知道了"});
+                                              $(".wtmodal_").css("display","none")
+                                            break;
+                                          }
+                                      })
+                                  })
+                              })
+                              swal({title: "委托正常，请支付", confirmButtonText: "我知道了"});
+                              break;
+                            case "102":
+                              swal({title:"字段为空",confirmButtonText: "我知道了"});
+                              $(".wtmodal_").css("display","none");
+                              break;
+                            case "101":
+                              swal({title:"系统错误",confirmButtonText: "我知道了"});
+                              $(".wtmodal_").css("display","none");
+                              break;
+                            case "301":
+                              swal({title:"拍卖已经结束",confirmButtonText: "我知道了"})
+                              $(".wtmodal_").css("display","none");
+                              break;
+                            case "305":
+                              swal({title:"余额不足",confirmButtonText: "我知道了"});
+                              var fee = data.data.fee;
+                              var usableCoin = data.data.usableCoin;
+                              var usableMoney = data.data.usableMoney;
+                              var price= Math.ceil(fee-(usableCoin+usableMoney))
+                              $(".fee_").text(fee);
+                              $(".usableCoin_").text("（"+usableCoin+"）");
+                              $(".usableMoney_").text("（"+usableMoney+"）");
+                              $(".wtpay").removeClass("payByyue");
+                              $(".wtpay").addClass("change_");
+                              //$(".wtpay").text("立即充值");
+                              $(".wtpay").text("立即充值");
+                              $(".change_").click(function(){
+                              //委托余额不足 微信充值接口
+                              $('.wxpay_wraper').css("display",'inline-block');
+                              $('.wtmodal_').css("display",'none');
+                                console.log("APP URL下载地址")
+                              })
+                              break;
+                            case "306":
+                              swal({title:"委托价低于当前价",confirmButtonText: "我知道了"})
+                              $(".wtmodal_").css("display","none");
+                              break;
+                            case"307":
+                              swal({title:"委托还未失效",confirmButtonText: "我知道了"});
+                              $(".wtmodal_").css("display","none")
+                            break;
+                          }
+                    });
+                  $(".wtmodal_").css("display","block");
+                });
+              });
+            }
+          //- }else{
+          //-   $(".gzmodal").css("display","inline-block")
+          //- }
+        });
+        //立即出价事件
+        $(".btn_right").click(function(){
+        var havePayPwd = $("#havePayPwd").val();
+        var mobile = $("#mobile").val();
+        console.log(!(mobile&&havePayPwd))
+          //if(subscribe){
+            if(!(mobile&&havePayPwd==1)){
+              $(".phmodal").css("display","block");
+              $(".sendCode").click(function(){
+              //判断手机号合法性
+              var phone = $('#phone').val();
+                console.log(phone)
+              if(!(/^1[34578]\d{9}$/.test(phone))){ 
+                  swal({title:"手机号码有误",confirmButtonText: "我知道了"}); 
+                  $("#phone").focus(); 
+                  return false; 
+              } else{
+                var phone = $('#phone').val();
+                console.log(phone)
+                $.post(ApiUrl+"/WebApi/sendCode",{target:phone,type:1},
+                  function(data){
+                    if(data.code==100){
+                      alert(data.msg)
+                      var countdown=60;
+                      function time(o) {  
+                        if (countdown == 0) {  
+                            $(".sendCode").removeAttr("disabled");            
+                            $(".sendCode").attr("value","获取验证码");  
+                            $(".sendCode").removeClass("sendCodedis"); 
+                            countdown=60;  
+                        } else {  
+                            $(".sendCode").attr("disabled", true);  
+                            $(".sendCode").attr("value","重新发送(" + countdown + ")"); 
+                            $(".sendCode").addClass("sendCodedis");
+                            countdown--;  
+                            setTimeout(function() {
+                                time(this)  
+                            },  
+                            1000)
+                          }  
+                      } 
+                    time(this) 
+                    }else{
+                      console.log(data.code)
+                    }
+                    console.log(data)
+                  })
+                }
+              });
+          
+              $(".modal_confim").click(function(){
+                var pass = $('#pass').val();
+                var passagain = $('#passagain').val();
+                var code = $('#code').val();
+                var phone = $('#phone').val();
+                var pass_md = md5(pass);
+                var reg = new RegExp(/^\d{6}$/);
+                var sixpass =  reg.test(pass);
+                if(!phone==''&&!code==''&&!pass==''&&!passagain==''&&(passagain==pass)&&sixpass){
+                console.log("userId:"+loginUser);
+                console.log("mobile:"+phone);
+                console.log("code:"+code);
+                console.log("payPwd:"+pass_md);
+                  if(!(/^1[34578]\d{9}$/.test(phone))){
+                    swal({title:"手机号码有误",confirmButtonText: "我知道了"}); 
+                    $("#phone").focus(); 
+                    return false; 
+                  }else{
+                    var unionid = $("#unionid").val();
+                    var gzopenId = $("#gzopenId").val();
+                    var iconUrl = $("#iconUrl").val();
+                    var nickName = $("#nickName").val();
+                    var gender = $("#gender").val();
+                    $.post(ApiUrl+"/WebApi/bindingMobile",{unionid:unionid,mobile:phone,code:code,payPwd:pass_md,gzopenId:gzopenId,iconUrl:iconUrl,nickName:nickName,gender:gender},
+                      function(data){
+                      console.log(data);
+                        console.log(data.code);
+                          var backcode = data.code;
+                          switch(backcode)
+                            {
+                            case "100":
+                              swal({title: "绑定成功",  timer: 1000,showConfirmButton: false });
+                              $(".phmodal").css("display","none");
+                              window.location.href=window.location.href+"?id="+66;
+                              break;
+                            case "102":
+                              swal({title:"字段为空",confirmButtonText: "我知道了"})
+                              break;
+                            case "101":
+                              swal({title:"系统错误",confirmButtonText: "我知道了"})
+                              break;
+                            case "501":
+                              swal({title:"验证码无效",confirmButtonText: "我知道了"})
+                              break;
+                            case "502":
+                              swal({title:"验证码超过验证时间",confirmButtonText: "我知道了"})
+                              break;
+                            case "503":
+                              swal({title:"验证码无效",confirmButtonText: "我知道了"})
+                              break;
+                            }
+                      }
+                    )
+                  }
+                }else{
+                  swal({title:'提交信息不全或密码不一致',confirmButtonText: "我知道了"})
+                }
+              });
+            }else{
+              $(".wtmodal").css("display","block");
+              //var getBidPirce = ApiUrl+"/WebApi/getBidPirce?userId="+loginUser+"&arttalkId="+arttalkId;
+              var unionid = $("#unionid").val();
+              var getBidPirce = ApiUrl+"/WebApi/getBidPirce?unionid="+unionid+"&arttalkId="+arttalkId;
+              console.log(getBidPirce)
+              $.get(getBidPirce,
+                function(data){
+                  console.log(data);
+                  
+                  switch(data.code)
+                            {
+                            case "100":
+                              var bidPrice = data.data.bidPrice;
+                              var fee = data.data.fee;
+                              var usableCoin = data.data.usableCoin;
+                              var usableMoney = data.data.usableMoney;
+                              var total_count = usableCoin+usableMoney;
+                              $(".bidPrice").text(bidPrice);
+                              $(".fee").text(fee+" 元");
+                              $(".usableCoin").text("（"+usableCoin+"）");
+                              $(".usableMoney").text("（"+usableMoney+"）");
+                              var fee = data.data.fee;
+                              var usableCoin = data.data.usableCoin;
+                              var usableMoney = data.data.usableMoney;
+                              var total_count = usableCoin+usableMoney;
+                              //var feeVia = Math.ceil(fee);
+                              //var priceVia = Math.ceil(bidPrice);
+                              //var feeVia = Math.round(fee*100)/100;
+                              $(".fee").text(fee);
+                              $(".usableCoin").text("（"+usableCoin+"）");
+                              $(".usableMoney").text("（"+usableMoney+"）");
+                              $(".cjpay").removeClass("change");
+                              $(".cjpay").addClass("payByyue");
+                              $(".payByyue").text("立即支付");
+                              
+                              //余额充足支付
+                              $(".payByyue").click(function(){
+                              //swal支付密码弹窗
+                              swal({
+                                  title: "请输入支付密码",
+                                  text:"支付金额"+fee,
+                                  type: "input",
+                                  inputType:"password",
+                                  confirmButtonText: "确定",
+                                  cancelButtonText: "取消",
+                                  showCancelButton: true,
+                                  closeOnConfirm: false,
+                                  animation: "slide-from-top",
+                                  inputPlaceholder: "请输入支付密码",},function(inputValue){
+                                    if (inputValue === false) return false;
+                                    
+                                    if (inputValue === ""){
+                                      swal.showInputError("必须输入支付密码");
+                                      return false
+                                    }else{
+                                      var payPwd = md5(inputValue);
+                                      var cj_price =  $(".bidPrice").text();
+                                      var unionid = $("#unionid").val();
+                                     // $.post(ApiUrl+"/WebApi/auctionBid",{userId:loginUser,arttalkId:arttalkId,bidPrice:cj_price,payPwd:payPwd},
+                                      $.post(ApiUrl+"/WebApi/auctionBid",{unionid:unionid,arttalkId:arttalkId,bidPrice:cj_price,payPwd:payPwd},
+                                      function(data){
+                                        console.log(data)
+                                          if(data.code==100){
+                                            swal({title:"支付成功",confirmButtonText: "我知道了"})
+                                            //加价渲染到拍卖记录
+                                              var record_pm = data.data.bidRecordList;
+                                              console.log(record_pm);
+                                              var tbodys = "";
+                                              $.each(record_pm,function(index,obj){
+                                                //console.log(obj);
+                                                if(obj.type==1){
+                                                  var  type_sub ="加价";
+                                                }else if(obj.type==2){
+                                                  var  type_sub ="委托";
+                                                }
+                                                var trs = "";
+                                                var tbody = $("#priceRecord").find("tbody")
+                                                  trs += "<tr><td>" + obj.nickName + "</td> <td>" + type_sub + "</td><td>"+"领先" + "</td><td>" + obj.bidPrice + "</td></tr>";
+                                                  tbodys += trs;
+                                                  //console.log(tbodys)
+                                               tbody.html(tbodys);
+                                              });
+                                              $(".wtmodal").css("display","none")
+                                              window.location.href=window.location.href+"?id="+66;
+                                          }else if(data.code==302){
+                                            swal({title:"支付密码不正确",confirmButtonText: "我知道了"})
+                                          }else if(data.code==303){
+                                            swal({title:"出价已被超越",confirmButtonText: "我知道了"})
+                                          }else if(data.code==304){
+                                            swal({title:"已经是最高出价",confirmButtonText: "我知道了"});
+                                            $(".wtmodal").css("display","none")
+                                          }
+                                      })
+                                    }
+                                  })
+                              })
+                             
+                              //swal({title: "委托正常，请支付", confirmButtonText: "我知道了"});
+                              break;
+                            case "102":
+                              swal({title:"字段为空",confirmButtonText: "我知道了"});
+                              $(".wtmodal").css("display","none");
+                              break;
+                            case "101":
+                              swal({title:"系统错误",confirmButtonText: "我知道了"});
+                              $(".wtmodal").css("display","none");
+                              break;
+                            case "303":
+                              swal({title:" 出价已被超越",confirmButtonText: "我知道了"})
+                              $(".wtmodal").css("display","none");
+                              break;
+                            case "304":
+                              swal({title:" 已经是最高出价",confirmButtonText: "我知道了"})
+                              $(".wtmodal").css("display","none");
+                              break;
+                            case "305":
+                              swal({title:"余额不足",confirmButtonText: "我知道了"});
+                              var fee = data.data.fee;
+                              var usableCoin = data.data.usableCoin;
+                              var usableMoney = data.data.usableMoney;
+                              var price= Math.ceil(fee-(usableCoin+usableMoney))
+                              $(".fee").text(fee);
+                              $(".usableCoin").text("（"+usableCoin+"）");
+                              $(".usableMoney").text("（"+usableMoney+"）");
+                              $(".cjpay").removeClass("payByyue");
+                              $(".cjpay").addClass("change");
+                              
+                              $(".cjpay").text("立即充值");
+                              $(".change").click(function(){
+                              //委托余额不足 微信充值接口
+                                //- $.post(ApiUrl+'/WebApi/unifiedorder',{userId:loginUser,price:price},
+                                //- function(data){
+                                //-   console.log(data)
+                                //- })
+                                $('.wxpay_wraper').css("display",'inline-block');
+                                $('.wtmodal').css("display",'none');
+                                console.log("APP URL下载地址");
+                                //window.location.href = "http://a.app.qq.com/o/simple.jsp?pkgname=com.ybd.yl";
+                              })
+                              break;
+                              case "306":
+                                swal({title:"委托价低于当前价",confirmButtonText: "我知道了"})
+                                $(".wtmodal").css("display","none");
+                                break;
+                              case"307":
+                                swal({title:"委托还未失效",confirmButtonText: "我知道了"});
+                                $(".wtmodal").css("display","none")
+                              break;
+                            }
+                      
+              });
+            }
+          //- }else{
+          //-   $(".gzmodal").css("display","inline-block")
+          //- }
+          
+          //-以上出价绑定
+
+
+          
+        });
+        //关闭弹窗
+        $(".modal_weituo_close").click(function(){
+          $(".wtmodal").css("display","none");
+        });
+        $(".modal_weituo_close_").click(function(){
+          $(".wtmodal_").css("display","none");
+        });
+        $(".modal_phone_close").click(function(){
+          $(".phmodal").css("display","none");
+        })
+        //跳转详情
+        new Mlink({
+          mlink:'https://ab03ls.mlinks.cc/AcGR?pushType=3&sourceId='+arttalkId,//短链地址
+          button:document.querySelector('a#auction_down')
+        });
+        //判断app是否存在
+        //- $(".isapp").click(function(){
+        //-   var isAndroid = navigator.userAgent.indexOf('Android') > -1 || navigator.userAgent.indexOf('Linux') > -1; //android终端
+        //-   var isiOS = !!navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+        //-   //- alert('isiOS:'+isiOS)
+        //-   //- alert('isAndroid:'+isAndroid)
+        //-   if(isiOS){
+        //-     //function ios(){
+        //-       var ifr = document.createElement("iframe");
+        //-       ifr.src = "com.yilun://?type=3&id="+arttalkId; //打开app的协议
+        //-       ifr.style.display = "none"; 
+        //-       document.body.appendChild(ifr);
+        //-       window.setTimeout(function(){
+        //-         document.body.removeChild(ifr);
+        //-          //window.location.href = "http://a.app.qq.com/o/simple.jsp?pkgname=com.ybd.yl"; //下载app的地址
+        //-       },2000)
+        //-     //};
+        //-   }
+        //-   if(isAndroid){
+        //-       var ifr = document.createElement("iframe");
+        //-       //- ifr.src = "yilun://splash:8888/welcome"; //打开app的协议
+        //-       ifr.src = "yilun://splash:8888/?type=3&id="+arttalkId;
+        //-       ifr.style.display = "none"; 
+        //-       document.body.appendChild(ifr);
+        //-       window.setTimeout(function(){
+        //-         document.body.removeChild(ifr);
+        //-         //window.location.href = "http://a.app.qq.com/o/simple.jsp?pkgname=com.ybd.yl"; //下载app的地址
+        //-       },2000)
+        //-   }
+        //- })
+      }

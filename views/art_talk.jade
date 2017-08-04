@@ -1,0 +1,532 @@
+extends art_talk_header
+block content
+  .header_wrapper
+    input(type="hidden" id="han")
+    input(type="hidden" id="appraise")
+    input(type="hidden" id='arttalkId' value= arttalkId)
+    input(type="hidden" id='unionid' value= unionid)
+    input(type="hidden" id='shareUserId' value= shareUserId)
+    input(type="hidden" id='userId' value= userId)
+    input(type="hidden" id='disoperation' value= disoperation)
+    input(type="hidden" id='state' value= "#{dataApi.data.state}")
+
+    include imgUrl
+    .header_left
+      .header_avatar(style="background-image:url(#{imgUrl}#{dataApi.data.iconUrl})")
+      .level 
+        img(src="/ArtWebStatic/images/#{dataApi.data.level}.png")
+      p(style="color: #fff").nickname #{dataApi.data.nickName}
+  //-轮播图
+  .swiper-container
+    .swiper-wrapper
+      - var items = dataApi.data.picList
+      each item in items
+        .swiper-slide 
+          div(style="background-image:url(#{imgUrl}#{item.imgUrl});width: 100%;height: 10rem;background-size: cover; background-position: 50%;background-repeat: no-repeat;")
+          //-img(src="#{imgUrl}#{item.imgUrl}")
+    .swiper-pagination
+  h1.author #{dataApi.data.attribute.title}  #{dataApi.data.attribute.author}
+  .content_intro
+    .hack
+    .intro_list
+      if dataApi.data.typeName
+        .sub_list
+          span 来自：
+            span #{dataApi.data.typeName}
+      else
+        .sub_list(style="display:none")
+      if dataApi.data.attribute.texture
+        .sub_list
+          span 质地：
+            span #{dataApi.data.attribute.texture}
+      else
+        .sub_list(style="display:none")
+      //- .intro_list
+      if dataApi.data.attribute.year
+        .sub_list
+          span 年代：
+            span #{dataApi.data.attribute.year}
+      else
+        .sub_list(style="display:none")
+      if dataApi.data.attribute.origin
+        .sub_list
+          span 产地：
+            span #{dataApi.data.attribute.origin}
+      else
+        .sub_list(style="display:none")
+        //- .intro_list
+      if dataApi.data.attribute.diameter 
+        .sub_list
+          span 直径：
+            span #{dataApi.data.attribute.diameter}cm
+      else
+        .sub_list(style="display:none")
+      if dataApi.data.attribute.weight
+        .sub_list
+          span 重量：
+            span #{dataApi.data.attribute.weight}g
+      else
+        .sub_list(style="display:none")
+      //- .intro_list
+      if dataApi.data.attribute.length||dataApi.data.attribute.width||dataApi.data.attribute.height
+        .sub_list
+          span 尺寸：
+            if dataApi.data.attribute.length
+              |长#{dataApi.data.attribute.length}cm
+            else 
+              |长(0)cm 
+            if dataApi.data.attribute.width 
+              |*宽#{dataApi.data.attribute.width}cm
+            else 
+              |*宽(0)cm 
+            if dataApi.data.attribute.height  
+              |*高#{dataApi.data.attribute.height}cm
+            else 
+              |*高(0)cm 
+            if dataApi.data.attribute.amount
+              |*条屏#{dataApi.data.attribute.amount}
+            else 
+              span(style="display:none")
+      else
+        .sub_list(style="display:none")
+      if dataApi.data.attribute.flaw
+        .sub_list
+          span 瑕疵说明：
+            span #{dataApi.data.attribute.flaw}
+      else
+        .sub_list(style="display:none")
+    if dataApi.data.attribute.description
+      .intro_list
+        .sub_list(style="width:100%")
+          span 详情：
+          span #{dataApi.data.attribute.description}
+    else
+        .intro_list(style="display:none")
+  //-打分 估值
+  //- if !disoperation
+  .scoring_wrapper
+    span.scoring_tip 可以设置底价上拍啦，快去帮他设置吧~
+    input.silde(type="range" id="range" min="0" max="10" step="1" value="#{dataApi.data.score}")
+    //- <div class="range_mask"></div>
+    .score_num
+      ul
+        - var num = {zero:0,one:1,two:2,three:3,forth:4,five:5,six:6,seven:7,eight:8,night:9,ten:10}
+        each value in num
+          li= value
+    a.record(href="/ArtWeb/data_statistic?arttalkId=#{arttalkId}&userId=#{userId}")
+      span.record_img
+        img(src="/ArtWebStatic/images/shuju.png")
+      span 作品数据
+    //- if !disoperation
+    .guzhi.on
+      span 估值
+  .bg_shade#appraisement(style="display:none")
+    //-估值弹窗
+    .guzhi.off
+      span 估值
+    div(style="position: fixed; bottom: 0; left: 0; right: 0; height: 11.5rem; width: 100%; background: rgb(255, 255, 255);")
+      .price(style="width: 215%;margin-left:0.1rem;")
+        script.
+          function guzhi(avg,han,appraise){$("#money").val(avg);$("#han").val(han);$("#appraise").val(appraise);}
+        ul.price_t(style="width: 215%;")
+          li
+            a(onclick="guzhi('150000','10-20万','100000-200000')") 10-20万
+          li
+            a(onclick="guzhi('250000','20-30万','200000-300000')") 20-30万
+          li
+            a(onclick="guzhi('350000','30-40万','300000-400000')") 30-40万
+          li
+            a(onclick="guzhi('450000','40-50万','400000-500000')") 40-50万
+          li
+            a(onclick="guzhi('550000','50-60万','500000-600000')") 50-60万
+          li
+            a(onclick="guzhi('650000','60-70万','600000-700000')") 60-70万
+          li
+            a(onclick="guzhi('750000','70-80万','700000-800000')") 70-80万
+          li
+            a(onclick="guzhi('850000','80-90万','800000-900000')") 80-90万
+          li
+            a(onclick="guzhi('950000','90-100万','900000-1000000')") 90-100万
+          li
+            a(onclick="guzhi('1000001','100万','1000001')") 100万以上
+        ul.price_c(style="width: 215%;")
+          li
+            a(onclick="guzhi('15000','1-2万','10000-20000')") 1-2万
+          li
+            a(onclick="guzhi('25000','2-3万','20000-30000')") 2-3万
+          li
+            a(onclick="guzhi('35000','3-4万','30000-40000')") 3-4万
+          li
+            a(onclick="guzhi('45000','4-5万','40000-50000')") 4-5万
+          li
+            a(onclick="guzhi('55000','5-6万','50000-60000')") 5-6万
+          li
+            a(onclick="guzhi('65000','6-7万','60000-70000')") 6-7万
+          li
+            a(onclick="guzhi('75000','7-8万','70000-80000')") 7-8万
+          li
+            a(onclick="guzhi('85000','8-9万','80000-90000')") 8-9万
+          li
+            a(onclick="guzhi('95000','9-10万','90000-100000')") 9-10万
+        ul.price_b(style="width: 215%;")
+          li
+            a(onclick="guzhi('500','1千以下','1000')") 1千以下
+          li
+            a(onclick="guzhi('1500','1-2千','1000-2000')") 1-2千
+          li
+            a(onclick="guzhi('2500','2-3千','2000-3000')") 2-3千
+          li
+            a(onclick="guzhi('3500','3-4千','3000-4000')") 3-4千
+          li
+            a(onclick="guzhi('4500','4-5千','4000-5000')") 4-5千
+          li
+            a(onclick="guzhi('5500','5-6千','5000-6000')") 5-6千
+          li
+            a(onclick="guzhi('6500','6-7千','6000-7000')") 6-7千
+          li
+            a(onclick="guzhi('7500','7-8千','7000-8000')") 7-8千
+          li
+            a(onclick="guzhi('8500','8-9千','8000-9000')") 8-9千
+          li
+            a(onclick="guzhi('9500','9千-1万','9000-10000')") 9千-1万
+      .custom_price
+        form
+          span 自定义：
+            input(type="text" placeholder="输入估值金额" maxlength="6").input_filed#money
+      .refer_btn
+        //- button.submitguzhi 提交
+        span.submitguzhi 提交
+  //- 评论和赞
+  .comment_like_wrapper
+    .comment_like_header
+      .comment_header.active 评论
+        span(style="margin-left:0.15rem") #{dataApi.data.commentCount}
+      .like_header 赞
+        span(style="margin-left:0.15rem") #{dataApi.data.thumbupCount}
+    .comment_content_wrapper.header_content_wrapper
+      - var items = dataApi.data.commentList
+      each item in items
+        .header_content.comment_content
+          .header_avatar(style="background-image:url(#{imgUrl}#{item.iconUrl});position:relative").comment_avatar
+            .level(style="top: 1.5rem;left: 1.5rem;") 
+                img(src="/ArtWebStatic/images/#{item.level}.png")
+          .header_right
+            p(style="color: #646464") #{item.userName}
+            -var commentTime =item.createTime
+            p(style="color: #cecece") #{date('m-d H:i',commentTime)}
+            if item.replyUserName == ''
+              p #{item.text}
+            else
+              p #{item.text}
+              p 回复 #{item.replyUserName} #{item.text}
+    .like_content_wrapper
+      -var items = dataApi.data.thumbUpList
+      each item in items
+        .like_content
+          .like_left
+            .header_avatar(style="background-image:url(#{imgUrl}#{item.iconUrl});position:relative")
+              .level(style="top: 0.8rem;left: 1.5rem;")  
+                img(src="/ArtWebStatic/images/#{item.level}.png")
+            span(style="padding:0.2rem") #{item.nickName}
+          .like_right
+            -var likeTime =item.createTime
+            span #{date('m-d H:i',likeTime)}
+  //- 提示下载链接
+  .down_yilun_mask
+  .down_yilun(style="position: fixed;bottom: 0;left: 0")
+    span.appclose#appclose(style="display: inline-block;width: 1.2rem;float: right;margin-bottom: 5px;margin-right: 0.1rem;")
+      img( src="/ArtWebStatic/images/close1.png" style="vertical-align: bottom;")
+    span
+      a#talk_down(style="display:inline-block")
+        //- a.isapp(href="http://a.app.qq.com/o/simple.jsp?pkgname=com.ybd.yl" style="display:inline-block")
+        img(src="/ArtWebStatic/images/dibu.png" style="vertical-align: bottom;")
+  script(src='/ArtWebStatic/javascripts/jquery.min.1.8.3.js')
+  script(src='/ArtWebStatic/javascripts/swiper-3.4.2.jquery.min.js')
+  script(src='/ArtWebStatic/javascripts/rangeSlide.js')
+  script(src='/ArtWebStatic/javascripts/hammer.js')
+  script(src='/ArtWebStatic/javascripts/sweetalert.min.js')
+  script(src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js")
+  script(src="https://static.mlinks.cc/scripts/dist/mlink.min.js")
+  include wxconfig
+  include APIUrl
+  include DomainUrl
+    script.
+      var arttalkId = $('#arttalkId').val();
+      var shareUserId = $('#shareUserId').val();
+      var userId = $('#userId').val();
+      wx.ready(function() {
+        var str = "【帮忙掌掌眼】";
+          if("#{dataApi.data.attribute.title}"){
+            str += "【作品：#{dataApi.data.attribute.title}】";
+          }
+          if("#{dataApi.data.attribute.author}"){
+            str += "【作者：#{dataApi.data.attribute.author}】";
+          }
+          if("#{dataApi.data.attribute.year}"){
+            str += "【年代：#{dataApi.data.attribute.year}】";
+          }
+          if("#{dataApi.data.attribute.texture}"){
+            str += "【质地：#{dataApi.data.attribute.texture}】";
+        }
+        //alert('#{imgUrl}#{dataApi.data.picList}[0].litimgUrl')
+        wx.onMenuShareAppMessage({
+          title : '好物共赏，一起来打分吧', // 分享标题
+          desc : str, // 分享描述
+          link : 'https://artworktalk.com/ArtWeb/arttalksq?shareUserId='+shareUserId+'&arttalkId='+arttalkId, // 分享链接
+          imgUrl : '#{imgUrl}#{dataApi.data.picList[0].litimgUrl}', // 分享图标
+          type : 'link', // 分享类型,music、video或link，不填默认为link
+          dataUrl : '', // 如果type是music或video，则要提供数据链接，默认为空
+          success : function() {
+            // 用户确认分享后执行的回调函数
+          },
+          cancel : function() {
+            // 用户取消分享后执行的回调函数
+          }
+        });
+        wx.onMenuShareTimeline({
+          title : str, // 分享标题
+          link : 'https://artworktalk.com/ArtWeb/arttalksq?arttalkId='+arttalkId+'&shareUserId='+shareUserId, // 分享链接
+          imgUrl : '#{imgUrl}#{dataApi.data.picList[0].litimgUrl}', // 分享图标
+          type : 'link', // 分享类型,music、video或link，不填默认为link
+          dataUrl : '', // 如果type是music或video，则要提供数据链接，默认为空
+          success : function() {
+            // 用户确认分享后执行的回调函数
+          },
+          cancel : function() {
+            // 用户取消分享后执行的回调函数
+          }
+        });
+        $(function(){  
+          var imgsurl=[];
+          var imgsurl_ios = [];  
+          var nowurl='';  
+          var imgObj=$(".swiper-slide div");  
+          for(var i=0;i<imgObj.length;i++){
+              var strlen_an = imgObj[i].style.backgroundImage.length-2;
+              imgsurl[i]=imgObj[i].style.backgroundImage.substring(5,strlen_an);
+              
+              var strlen_ios = imgObj[i].style.backgroundImage.length-1;
+              imgsurl_ios[i]=imgObj[i].style.backgroundImage.substring(4,strlen_ios);
+              
+              imgObj[i].onclick=function(){
+                  if(/android/i.test(navigator.userAgent)){
+                    nowurl=this.style.backgroundImage.substring(5,strlen_an);
+                    //alert(nowurl);
+                    //alert("anzhuo");
+                    wx.previewImage({  
+                      current: nowurl,  // 当前显示图片的http链接
+                      urls: imgsurl  // 需要预览的图片http链接列表
+                    });
+                  }else if(/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)){
+                    nowurl=this.style.backgroundImage.substring(4,strlen_ios);  
+                    //alert("ios")
+                    //alert(nowurl)
+                    wx.previewImage({  
+                      current: nowurl,  // 当前显示图片的http链接
+                      urls: imgsurl_ios  // 需要预览的图片http链接列表
+                    }); 
+                  }
+                               
+              }  
+            }  
+        });  
+      });
+      window.onload=function(){
+        //- var ApiUrl = 'http://fengyongpan.s1.natapp.cc';
+        var disoperation = $("#disoperation").val();
+        //评论和赞切换
+        $(".comment_header").click(function(){
+          $(this).addClass("active");
+          $(".like_header").removeClass('active');
+          $(".like_content_wrapper").css('display','none');
+          $(".comment_content_wrapper").css('display',' block');
+        });
+        $(".like_header").click(function(){
+          $(this).addClass("active");
+          $(".comment_header").removeClass('active');
+          $(".like_content_wrapper").css('display','block');
+          $(".comment_content_wrapper").css('display','none');
+        });
+        //下载链接高度
+        var down_yilun = $(".down_yilun").height() + "px";
+        $(".down_yilun_mask").css("height", down_yilun);
+        //- 浮层显隐
+        var oClose = document.getElementById('appclose');
+
+        oClose.addEventListener('click',function(){
+            this.parentNode.classList.remove('fixShow');
+            window.removeEventListener('scroll',showFix,false);
+        },false);
+        /*下载浮层显隐*/
+        if(document.querySelector('.down_yilun')){
+            window.addEventListener('scroll',showFix,false);
+        }
+
+        function showFix(){
+          var scrollT = document.documentElement.scrollTop || document.body.scrollTop,
+              oFix = document.querySelector('.down_yilun');
+            if(scrollT>1){
+                oFix.classList.add('fixShow');
+            }else{
+                oFix.classList.remove('fixShow') ;
+            };
+        }
+        //艺论状态
+        var state = $("#state").val();
+        var arttalkId = $('#arttalkId').val();
+        var loginUser = $('#userId').val();
+        if(state == 2){
+          $(".scoring_wrapper").css("display","none")
+          $(".guzhi").css("display","none")
+        }else if(state == 3){
+          $(".scoring_wrapper").css("display","none")
+          $(".guzhi").css("display","none")
+        }else if(state == 4){
+          $(".scoring_wrapper").css("display","none")
+          $(".guzhi").css("display","none");
+          window.location.href=DomainUrl+'/auction_oauth?shareUserId='+loginUser+'&arttalkId='+arttalkId
+          console.log(DomainUrl+'/auction_oauth?shareUserId='+loginUser+'&arttalkId='+arttalkId)
+        }
+        //轮播图
+        var mySwiper = new Swiper('.swiper-container', {
+          loop: false,
+          // 如果需要分页器
+          pagination: '.swiper-pagination'
+        }) ;
+        //if(!disoperation){
+        //  swal({title:"艺论已经上拍,不允许操作",confirmButtonText: "我知道了"}); 
+        //}else{
+          var score =$(".silde").val();
+
+          //评分
+          //- var change = function($input) {
+          //-   var unionid = $("#unionid").val();
+          //-   var arttalkId = $('#arttalkId').val();
+          //-   var score =$(".silde").val();
+          //-     //$.post(ApiUrl+"/WebApi/arttalkScore", { arttalkId: arttalkId, userId:'#{dataApi.data.loginUser}', score:score},
+            
+          //-   $.post(ApiUrl+"/WebApi/arttalkScore", {arttalkId: arttalkId, unionid:unionid, score:score},
+          //-     function(data){
+          //-       console.log(data);
+          //-       if(data.code ==100){
+          //-         swal({title:"评分成功",confirmButtonText: "我知道了"});
+          //-       }
+          //-     });
+          //-     console.log("123");
+          //-   }
+            //$(".silde").css('background-size',  score*10 + '% 100%' );
+            //$('.silde').RangeSlider({ min: 0, max: 10,  step: 1,  callback: change});
+            $('.silde').RangeSlider({ min: 0, max: 10,  step: 1});
+            $(".silde").css('background-size',  score*10 + '% 100%' );
+            $('.silde').change(function(){
+              var unionid = $("#unionid").val();
+              var arttalkId = $('#arttalkId').val();
+              var score =$(".silde").val();
+              $.post(ApiUrl+"/WebApi/arttalkScore", {arttalkId: arttalkId, unionid:unionid, score:score},
+                  function(data){
+                    console.log(data);
+                    if(data.code ==100){
+                      swal({title:"评分成功",confirmButtonText: "我知道了"});
+                    }else if(data.code ==201){
+                      swal({title:"艺论已经上拍,不允许操作",confirmButtonText: "我知道了"});
+                    }
+                });
+              $(".silde").css('background-size',  score*10 + '% 100%' );
+            });
+          //估值滑动
+          (function(){
+            var price, margin;
+            new Hammer($(".price")[0], {
+              domEvents : true
+            });
+            $(".price").on("panstart", function(e) {
+              price = $(".price");
+              margin = parseInt(price.css("margin-left"), 10);
+            });
+            $(".price").on("pan", function(e) {
+              console.log("price");
+              var delta = margin + e.originalEvent.gesture.deltaX;
+              console.log(delta);
+              if (delta >= -485 && delta <= 2) {
+                price.css({
+                  "margin-left" : margin + e.originalEvent.gesture.deltaX +8
+                });
+              }
+            });
+          })();
+        
+          //估值弹窗隐藏显示
+          $(".on").click(function(){
+            $(this).css('display','none')
+            $("#appraisement").css('display','inline-block');
+            $(".off").addClass("animated fadeInDown");
+            $(".off").css('display','flex');
+            $("#appraisement").addClass("animated fadeInDown");
+          })
+          $(".off").click(function(){
+            $("#appraisement").css('display','none');
+            $(".on").addClass("animated fadeInUp");
+            $(this).css('display','none');
+            $(".on").css('display','flex');
+            $("#appraisement").addClass("animated fadeInUp");
+          });
+          //估值
+          
+          $(".submitguzhi").click(function(){
+            var arttalkId = $('#arttalkId').val();
+            var valuation = $(".input_filed").val();
+            var userId = $('#userId').val();
+            var unionid = $("#unionid").val();
+            $.post(ApiUrl+"/WebApi/arttalkValuation", 
+              { 
+              arttalkId: arttalkId, 
+              unionid:unionid, 
+              valuation:valuation
+              },
+              function(data){
+                console.log(data);
+                console.log(valuation);
+                console.log(arttalkId);
+                console.log(unionid);
+                if(data.code ==100){
+                  swal({title:"估值成功",confirmButtonText: "我知道了"}); 
+                  $("#appraisement").css('display','none');
+                }
+              });
+            })
+        //}
+        //跳转详情
+        new Mlink({
+          mlink:'https://ab03ls.mlinks.cc/AcGR?pushType=2&sourceId='+arttalkId,//短链地址
+          button:document.querySelector('a#talk_down')
+        });
+        //判断app是否存在
+        //- $(".isapp").click(function(){
+        //-   var isAndroid = navigator.userAgent.indexOf('Android') > -1 || navigator.userAgent.indexOf('Linux') > -1; //android终端
+        //-   var isiOS = !!navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+        //-   //- alert('isiOS:'+isiOS)
+        //-   //- alert('isAndroid:'+isAndroid)
+        //-   if(isiOS){
+        //-     //function ios(){
+        //-       var ifr = document.createElement("iframe");
+        //-       ifr.src = "com.yilun://?type=2&id="+arttalkId; //打开app的协议
+        //-       ifr.style.display = "none"; 
+        //-       document.body.appendChild(ifr);
+        //-       window.setTimeout(function(){
+        //-         document.body.removeChild(ifr);
+        //-          window.location.href = "http://a.app.qq.com/o/simple.jsp?pkgname=com.ybd.yl"; //下载app的地址
+        //-       },2000)
+        //-     //};
+        //-   }
+        //-   if(isAndroid){
+        //-       var ifr = document.createElement("iframe");
+        //-       ifr.src = "yilun://splash:8888/?type=2&id="+arttalkId; //打开app的协议
+        //-       ifr.style.display = "none"; 
+        //-       document.body.appendChild(ifr);
+        //-       window.setTimeout(function(){
+        //-         document.body.removeChild(ifr);
+        //-          window.location.href = "http://a.app.qq.com/o/simple.jsp?pkgname=com.ybd.yl"; //下载app的地址
+        //-       },2000)
+        //-   }
+        //- })
+      }

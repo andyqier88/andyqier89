@@ -1,0 +1,77 @@
+extends layout
+block content
+  div.art_head
+    div.head_main
+      h2
+      input(type="hidden" value= videoId)
+      span(style="color: #bcbcbc").time
+      span(style="margin-left: 1.08rem;color: #29b3d0")=author
+  div.art_main 
+    div.news_main
+      div.news_img
+        //- video(poster="http://oku9krjjy.bkt.clouddn.com/fs_root/icon_url/images/Local/9f36c8b034014af9ad5982b3aa10fb18/09df61c0192541cd9d3040378f6d53a3.jpeg" width="100%")#art_video
+      p.content 
+      p
+  include wxconfig
+    script.
+      wx.ready(function() {
+        wx.onMenuShareAppMessage({
+          title : '', // 分享标题
+          desc : '测试', // 分享描述
+          link : 'http://www.uuucai.com.cn:3000/art_video', // 分享链接
+          imgUrl : 'https://gold-cdn.xitu.io/v3/static/img/logo.a7995ad.svg', // 分享图标
+          type : 'link', // 分享类型,music、video或link，不填默认为link
+          dataUrl : '', // 如果type是music或video，则要提供数据链接，默认为空
+          success : function() {
+            // 用户确认分享后执行的回调函数
+          },
+          cancel : function() {
+            // 用户取消分享后执行的回调函数
+          }
+        });
+        wx.onMenuShareTimeline({
+          title : '测试', // 分享标题
+          desc : '测试', // 分享描述
+          link : 'http://www.uuucai.com.cn:3000/art_video', // 分享链接
+          imgUrl : 'https://gold-cdn.xitu.io/v3/static/img/logo.a7995ad.svg', // 分享图标
+          type : 'link', // 分享类型,music、video或link，不填默认为link
+          dataUrl : '', // 如果type是music或video，则要提供数据链接，默认为空
+          success : function() {
+            // 用户确认分享后执行的回调函数
+          },
+          cancel : function() {
+            // 用户取消分享后执行的回调函数
+          }
+        });
+      });
+      //- window.onload = function(){
+      //-   var videoId = $('input').val()
+      //-   //var videoId =videoId
+      //-   //var videoData = []
+      //-     $.ajax({
+      //-     type: 'GET',
+      //-     url: 'http://192.168.199.198:6789/WebApi/videoDetail?id='+videoId,
+      //-     //url:'https://api.douban.com/v2/book/17604305?fields=id,title,url',
+      //-     //- data: {id:'1'},
+      //-     dataType:"json", 
+      //-     success: function(res){
+      //-       var timestamp = res.data.pushTime;
+      //-       var newDate = new Date();
+      //-       newDate.setTime(timestamp);
+      //-       $('.time').text(newDate.toLocaleDateString())
+      //-       $("h2").html(res.data.title)
+      //-       $(".content").html(res.data.content)
+      //-       $("video").attr("poster",res.data.coverUrl).css("width","100%")
+      //-       console.log(res)
+      //-       //console.log(videoData)
+      //-     },
+      //-     error:function(err){
+      //-       console.log(err)
+      //-     }
+      //-   });
+      //- }
+      
+      
+     
+      
+      
