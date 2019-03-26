@@ -18,7 +18,7 @@
     "express-session": "^1.15.3",
     "gbk": "^0.1.0",
     "jade": "~1.11.0",
-    "morgan": "~1.8.1",
+    "morgan": "~1.9.1",
     "q": "^1.5.0",
     "request": "^2.81.0",
     "request-promise": "^4.2.1",
